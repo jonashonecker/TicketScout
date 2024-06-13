@@ -1,9 +1,6 @@
 name: analyze-backend-sonarcloud
 on:
   push:
-    branches:
-      - feature/2-set-up-ci-for-main-branch
-      - main
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
