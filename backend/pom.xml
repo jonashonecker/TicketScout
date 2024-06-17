@@ -49,6 +49,7 @@
     </dependencies>
 
     <build>
+        <finalName>ticketscout</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
