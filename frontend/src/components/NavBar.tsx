@@ -1,6 +1,8 @@
-import { AppBar, Toolbar } from "@mui/material";
+import { AppBar, Box, Toolbar } from "@mui/material";
 import { styled } from "@mui/system";
 import Logo from "./Logo.tsx";
+import UserMenuButton from "./UserMenuButton.tsx";
+import MainMenuButton from "./MainMenuButton.tsx";
 
 type NavBarProps = {
   navbarContext: "login" | "main";
@@ -24,7 +26,11 @@ export default function NavBar(props: NavBarProps) {
     return (
       <StyledAppBar position={"sticky"}>
         <Toolbar>
-          <Logo />
+          <MainMenuButton />
+          <Box sx={{ flexGrow: 1 }}>
+            <Logo />
+          </Box>
+          <UserMenuButton />
         </Toolbar>
       </StyledAppBar>
     );

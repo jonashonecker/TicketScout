@@ -4,7 +4,6 @@ export default function MainPage() {
   return (
     <>
       <NavBar navbarContext={"main"} />
-      Hello World
     </>
   );
 }
