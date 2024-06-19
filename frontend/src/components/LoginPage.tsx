@@ -1,5 +1,5 @@
 import NavBar from "./NavBar.tsx";
-import LoginButtonGitHub from "./LoginButtonGitHub.tsx";
+import LoginButton from "./LoginButton.tsx";
 import { Box, Container, Typography } from "@mui/material";
 
 export default function LoginPage() {
@@ -15,7 +15,7 @@ export default function LoginPage() {
           <Typography
             variant="h5"
             sx={{
-              fontWeight: "bold", // Make the text bold
+              fontWeight: "bold",
             }}
           >
             Explore your tickets &#127757;
@@ -37,7 +37,7 @@ export default function LoginPage() {
             justifyContent: "center",
           }}
         >
-          <LoginButtonGitHub />
+          <LoginButton />
         </Box>
       </Container>
     </>

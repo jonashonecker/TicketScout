@@ -19,7 +19,7 @@ function login() {
   window.open(host + "/oauth2/authorization/github", "_self");
 }
 
-export default function LoginButtonGitHub() {
+export default function LoginButton() {
   return (
     <StyledButton
       variant="contained"
