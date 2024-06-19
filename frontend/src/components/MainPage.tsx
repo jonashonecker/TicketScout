@@ -1,3 +1,10 @@
+import NavBar from "./NavBar.tsx";
+
 export default function MainPage() {
-  return <>Hello World</>;
+  return (
+    <>
+      <NavBar navbarContext={"main"} />
+      Hello World
+    </>
+  );
 }

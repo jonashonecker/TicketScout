@@ -1,11 +1,11 @@
-import LoginNavBar from "./LoginNavBar.tsx";
+import NavBar from "./NavBar.tsx";
 import LoginButtonGitHub from "./LoginButtonGitHub.tsx";
 import { Box, Container, Typography } from "@mui/material";
 
 export default function LoginPage() {
   return (
     <>
-      <LoginNavBar />
+      <NavBar navbarContext={"login"} />
       <Container maxWidth="xs">
         <Box
           sx={{
