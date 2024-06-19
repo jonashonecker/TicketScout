@@ -6,9 +6,10 @@ import MainPage from "./components/MainPage.tsx";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import { User } from "./types/User.ts";
 
 export default function App() {
-  const [user, setUser] = useState<string | null | undefined>(undefined);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
 
   const loadUser = () => {
     axios
@@ -30,7 +31,7 @@ export default function App() {
       <CssBaseline />
       <Routes>
         <Route element={<ProtectedRoute user={user} target={"main"} />}>
-          <Route path="/" element={<MainPage />} />
+          <Route path="/" element={<MainPage user={user} />} />
         </Route>
         <Route element={<ProtectedRoute user={user} target={"login"} />}>
           <Route path="/login" element={<LoginPage />} />

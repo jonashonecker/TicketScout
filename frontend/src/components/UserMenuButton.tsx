@@ -1,8 +1,13 @@
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
 import { MouseEvent, useState } from "react";
+import { User } from "../types/User.ts";
 
-export default function UserMenuButton() {
+type UserMenuButtonProps = {
+  user: User | null | undefined;
+};
+
+export default function UserMenuButton({ user }: UserMenuButtonProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const handleMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -31,7 +36,15 @@ export default function UserMenuButton() {
         onClick={handleMenu}
         color="inherit"
       >
-        <AccountCircle />
+        {user ? (
+          <Avatar
+            sx={{ height: "30px", width: "30px" }}
+            alt="User avatar picture"
+            src={user.avatarUrl}
+          />
+        ) : (
+          <AccountCircle />
+        )}
       </IconButton>
       <Menu
         id="menu-appbar"

@@ -1,7 +1,8 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { User } from "../types/User.ts";
 
 type ProtectedRouteProps = {
-  user: string | undefined | null;
+  user: User | undefined | null;
   target: "main" | "login";
 };
 
