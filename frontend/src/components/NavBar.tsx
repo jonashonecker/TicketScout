@@ -14,7 +14,7 @@ const StyledAppBar = styled(AppBar)({
   boxShadow: "none",
 });
 
-export default function NavBar({ navbarContext, user }: NavBarProps) {
+export default function NavBar({ navbarContext, user }: Readonly<NavBarProps>) {
   if (navbarContext === "login") {
     return (
       <StyledAppBar position={"sticky"}>

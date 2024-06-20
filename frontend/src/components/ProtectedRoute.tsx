@@ -6,7 +6,10 @@ type ProtectedRouteProps = {
   target: "main" | "login";
 };
 
-export default function ProtectedRoute({ user, target }: ProtectedRouteProps) {
+export default function ProtectedRoute({
+  user,
+  target,
+}: Readonly<ProtectedRouteProps>) {
   if (user === undefined) {
     return <div>Loading...</div>;
   }

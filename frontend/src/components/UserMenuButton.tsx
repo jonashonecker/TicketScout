@@ -7,7 +7,9 @@ type UserMenuButtonProps = {
   user: User | null | undefined;
 };
 
-export default function UserMenuButton({ user }: UserMenuButtonProps) {
+export default function UserMenuButton({
+  user,
+}: Readonly<UserMenuButtonProps>) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const handleMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
