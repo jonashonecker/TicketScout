@@ -83,7 +83,7 @@ jobs:
     needs: push-to-docker-hub
     environment:
       name: production # Capstone Project name
-      url: https://ticketscout-latest.onrender.com/login # Link to deployment
+      url: https://ticketscout-latest.onrender.com # Link to deployment
     steps:
       - name: Trigger Render.com Deployment
         run: |
