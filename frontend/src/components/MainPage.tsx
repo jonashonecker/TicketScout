@@ -6,9 +6,5 @@ type MainPageProps = {
 };
 
 export default function MainPage({ user }: Readonly<MainPageProps>) {
-  return (
-    <>
-      <NavBar navbarContext={"main"} user={user} />
-    </>
-  );
+  return <NavBar navbarContext={"main"} user={user} />;
 }
