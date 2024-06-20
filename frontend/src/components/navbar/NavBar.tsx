@@ -1,9 +1,9 @@
 import { AppBar, Box, Toolbar } from "@mui/material";
 import { styled } from "@mui/system";
-import Logo from "./Logo.tsx";
-import UserMenuButton from "./UserMenuButton.tsx";
-import MainMenuButton from "./MainMenuButton.tsx";
-import { User } from "../types/User.ts";
+import Logo from "../logos/Logo.tsx";
+import UserMenuButton from "../buttons/UserMenuButton.tsx";
+import MainMenuButton from "../buttons/MainMenuButton.tsx";
+import { User } from "../../types/User.ts";
 
 type NavBarProps = {
   navbarContext: "login" | "main";

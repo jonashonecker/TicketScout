@@ -1,7 +1,7 @@
 import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
 import { MouseEvent, useState } from "react";
-import { User } from "../types/User.ts";
+import { User } from "../../types/User.ts";
 
 type UserMenuButtonProps = {
   user: User | null | undefined;

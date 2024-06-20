@@ -1,5 +1,5 @@
-import NavBar from "./NavBar.tsx";
-import LoginButton from "./LoginButton.tsx";
+import NavBar from "../navbar/NavBar.tsx";
+import LoginButton from "../buttons/LoginButton.tsx";
 import { Box, Container, Typography } from "@mui/material";
 
 export default function LoginPage() {

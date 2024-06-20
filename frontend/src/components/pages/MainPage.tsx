@@ -1,5 +1,5 @@
-import NavBar from "./NavBar.tsx";
-import { User } from "../types/User.ts";
+import NavBar from "../navbar/NavBar.tsx";
+import { User } from "../../types/User.ts";
 
 type MainPageProps = {
   user: User | null | undefined;
