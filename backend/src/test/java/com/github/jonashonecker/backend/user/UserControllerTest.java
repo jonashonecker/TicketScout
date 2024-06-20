@@ -20,7 +20,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void getMe_whenUserNotLoggedIn_returnUserInformation() throws Exception {
+    void getMe_whenUserNotLoggedIn_returnUnauthorized() throws Exception {
         //GIVEN
         //WHEN
         mockMvc.perform(get("/api/auth/me"))
