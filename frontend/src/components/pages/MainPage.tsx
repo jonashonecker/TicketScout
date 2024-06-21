@@ -3,7 +3,7 @@ import { User } from "../../types/User.ts";
 import { Ticket } from "../../types/Ticket.ts";
 import { useState } from "react";
 import TicketCard from "../cards/TicketCard.tsx";
-import { Box, Container, Grid } from "@mui/material";
+import { Box, Container, Grid, Grow } from "@mui/material";
 import SearchForm from "../inputs/SearchForm.tsx";
 
 type MainPageProps = {
@@ -28,10 +28,12 @@ export default function MainPage({ user }: Readonly<MainPageProps>) {
           columns={{ xs: 1, sm: 8, md: 12, lg: 12 }}
           alignItems="stretch"
         >
-          {searchResults?.map((ticket) => (
-            <Grid key={ticket.id} item xs={1} sm={4} md={4} lg={3}>
-              <TicketCard ticket={ticket} />
-            </Grid>
+          {searchResults?.map((ticket, index) => (
+            <Grow in={true} timeout={500 + index * 100} key={ticket.id}>
+              <Grid item xs={1} sm={4} md={4} lg={3}>
+                <TicketCard ticket={ticket} />
+              </Grid>
+            </Grow>
           ))}
         </Grid>
       </Container>
