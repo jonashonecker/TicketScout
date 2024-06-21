@@ -1,4 +1,3 @@
-import * as React from "react";
 import LoginPage from "./components/pages/LoginPage.tsx";
 import { Route, Routes } from "react-router-dom";
 import MainPage from "./components/pages/MainPage.tsx";
@@ -27,17 +26,15 @@ export default function App() {
   }, []);
 
   return (
-    <React.Fragment>
-      <Theme>
-        <Routes>
-          <Route element={<ProtectedRoute user={user} target={"main"} />}>
-            <Route path="/" element={<MainPage user={user} />} />
-          </Route>
-          <Route element={<ProtectedRoute user={user} target={"login"} />}>
-            <Route path="/login" element={<LoginPage />} />
-          </Route>
-        </Routes>
-      </Theme>
-    </React.Fragment>
+    <Theme>
+      <Routes>
+        <Route element={<ProtectedRoute user={user} target={"main"} />}>
+          <Route path="/" element={<MainPage user={user} />} />
+        </Route>
+        <Route element={<ProtectedRoute user={user} target={"login"} />}>
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
+      </Routes>
+    </Theme>
   );
 }

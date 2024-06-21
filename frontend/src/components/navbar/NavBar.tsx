@@ -7,7 +7,7 @@ import { User } from "../../types/User.ts";
 
 type NavBarProps = {
   navbarContext: "login" | "main";
-  user?: User | null | undefined;
+  user?: User | null;
 };
 
 const StyledAppBar = styled(AppBar)({

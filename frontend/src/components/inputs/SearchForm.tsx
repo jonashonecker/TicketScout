@@ -8,7 +8,9 @@ type SearchFormProps = {
   setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
 };
 
-export default function SearchForm({ setSearchResults }: SearchFormProps) {
+export default function SearchForm({
+  setSearchResults,
+}: Readonly<SearchFormProps>) {
   function searchTickets(event: FormEvent) {
     event.preventDefault();
     axios

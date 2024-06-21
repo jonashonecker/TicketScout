@@ -39,7 +39,7 @@ const themeLight = createTheme({
   },
 });
 
-export default function Theme({ children }: { children: ReactNode }) {
+export default function Theme({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <ThemeProvider theme={themeLight}>
       <CssBaseline />

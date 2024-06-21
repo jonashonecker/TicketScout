@@ -6,7 +6,7 @@ type TicketCardProps = {
   ticket: Ticket;
 };
 
-export default function TicketCard({ ticket }: TicketCardProps) {
+export default function TicketCard({ ticket }: Readonly<TicketCardProps>) {
   return (
     <Card variant={"elevation"} sx={{ height: "100%" }}>
       <CardContent
