@@ -1,4 +1,4 @@
-import TicketScoutLogo from "../assets/TicketScoutLogo.svg";
+import TicketScoutLogo from "../../assets/TicketScoutLogo.svg";
 import { styled } from "@mui/system";
 
 const StyledImage = styled("img")({
