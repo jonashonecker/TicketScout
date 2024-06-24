@@ -7,9 +7,13 @@ import ProtectedRoute from "./components/utils/ProtectedRoute.tsx";
 import { User } from "./types/User.ts";
 import Theme from "./components/theme/Theme.tsx";
 import NewTicketPage from "./components/pages/NewTicketPage.tsx";
+import { Ticket } from "./types/Ticket.ts";
 
 export default function App() {
   const [user, setUser] = useState<User | null | undefined>(undefined);
+  const [searchResults, setSearchResults] = useState<Ticket[] | undefined>(
+    undefined,
+  );
 
   const loadUser = () => {
     axios
@@ -37,7 +41,16 @@ export default function App() {
         <Route
           element={<ProtectedRoute user={user} isTargetLoginPage={false} />}
         >
-          <Route path="/" element={<MainPage user={user} />} />
+          <Route
+            path="/"
+            element={
+              <MainPage
+                user={user}
+                searchResults={searchResults}
+                setSearchResults={setSearchResults}
+              />
+            }
+          />
         </Route>
         <Route
           element={<ProtectedRoute user={user} isTargetLoginPage={false} />}

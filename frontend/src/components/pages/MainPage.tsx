@@ -1,20 +1,22 @@
 import NavBar from "../navbar/NavBar.tsx";
 import { User } from "../../types/User.ts";
 import { Ticket } from "../../types/Ticket.ts";
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import TicketCard from "../cards/TicketCard.tsx";
 import { Box, Container, Grid, Grow } from "@mui/material";
 import SearchForm from "../inputs/SearchForm.tsx";
 
 type MainPageProps = {
   user: User | null | undefined;
+  searchResults: Ticket[] | undefined;
+  setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
 };
 
-export default function MainPage({ user }: Readonly<MainPageProps>) {
-  const [searchResults, setSearchResults] = useState<Ticket[] | undefined>(
-    undefined,
-  );
-
+export default function MainPage({
+  user,
+  searchResults,
+  setSearchResults,
+}: Readonly<MainPageProps>) {
   return (
     <>
       <NavBar user={user} />
