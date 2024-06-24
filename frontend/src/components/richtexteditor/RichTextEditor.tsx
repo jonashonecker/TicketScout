@@ -8,6 +8,7 @@ import { User } from "../../types/User.ts";
 
 type RichTextEditorProps = {
   user: User | null | undefined;
+  setDescription: (arg0: string) => void;
 };
 
 const extensions = [StarterKit, Image];
@@ -16,7 +17,10 @@ const content = `
 <p>Enter description here... </p>
 `;
 
-export default function RichTextEditor({ user }: RichTextEditorProps) {
+export default function RichTextEditor({
+  user,
+  setDescription,
+}: RichTextEditorProps) {
   return (
     <>
       <Box
@@ -28,6 +32,9 @@ export default function RichTextEditor({ user }: RichTextEditorProps) {
           slotBefore={<MenuBar user={user} />}
           extensions={extensions}
           content={content}
+          onUpdate={({ editor }) => {
+            setDescription(editor.getHTML());
+          }}
         ></EditorProvider>
       </Box>
     </>

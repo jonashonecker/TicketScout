@@ -28,10 +28,6 @@ export default function MenuBar({ user }: MenuBarProps) {
     return null;
   }
 
-  if (!editor) {
-    return null;
-  }
-
   const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     [`& .${toggleButtonGroupClasses.grouped}`]: {
       margin: theme.spacing(0.5),
