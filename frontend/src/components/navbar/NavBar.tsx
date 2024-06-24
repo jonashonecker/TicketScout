@@ -6,7 +6,6 @@ import MainMenuButton from "../buttons/MainMenuButton.tsx";
 import { User } from "../../types/User.ts";
 
 type NavBarProps = {
-  navbarContext: "login" | "main";
   user?: User | null;
 };
 
@@ -14,27 +13,16 @@ const StyledAppBar = styled(AppBar)({
   boxShadow: "none",
 });
 
-export default function NavBar({ navbarContext, user }: Readonly<NavBarProps>) {
-  if (navbarContext === "login") {
-    return (
-      <StyledAppBar position={"sticky"}>
-        <Toolbar>
+export default function NavBar({ user }: Readonly<NavBarProps>) {
+  return (
+    <StyledAppBar position={"sticky"}>
+      <Toolbar>
+        {user && <MainMenuButton />}
+        <Box sx={{ flexGrow: 1 }}>
           <Logo />
-        </Toolbar>
-      </StyledAppBar>
-    );
-  }
-  if (navbarContext === "main") {
-    return (
-      <StyledAppBar position={"sticky"}>
-        <Toolbar>
-          <MainMenuButton />
-          <Box sx={{ flexGrow: 1 }}>
-            <Logo />
-          </Box>
-          <UserMenuButton user={user} />
-        </Toolbar>
-      </StyledAppBar>
-    );
-  }
+        </Box>
+        {user && <UserMenuButton user={user} />}
+      </Toolbar>
+    </StyledAppBar>
+  );
 }

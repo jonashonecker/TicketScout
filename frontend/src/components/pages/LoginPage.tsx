@@ -5,7 +5,7 @@ import { Box, Container, Typography } from "@mui/material";
 export default function LoginPage() {
   return (
     <>
-      <NavBar navbarContext={"login"} />
+      <NavBar />
       <Container maxWidth="xs">
         <Box
           sx={{

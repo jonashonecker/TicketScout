@@ -6,6 +6,7 @@ import axios from "axios";
 import ProtectedRoute from "./components/utils/ProtectedRoute.tsx";
 import { User } from "./types/User.ts";
 import Theme from "./components/theme/Theme.tsx";
+import NewTicketPage from "./components/pages/NewTicketPage.tsx";
 
 export default function App() {
   const [user, setUser] = useState<User | null | undefined>(undefined);
@@ -28,11 +29,20 @@ export default function App() {
   return (
     <Theme>
       <Routes>
-        <Route element={<ProtectedRoute user={user} target={"main"} />}>
+        <Route
+          element={<ProtectedRoute user={user} isTargetLoginPage={true} />}
+        >
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
+        <Route
+          element={<ProtectedRoute user={user} isTargetLoginPage={false} />}
+        >
           <Route path="/" element={<MainPage user={user} />} />
         </Route>
-        <Route element={<ProtectedRoute user={user} target={"login"} />}>
-          <Route path="/login" element={<LoginPage />} />
+        <Route
+          element={<ProtectedRoute user={user} isTargetLoginPage={false} />}
+        >
+          <Route path="/newticket" element={<NewTicketPage />} />
         </Route>
       </Routes>
     </Theme>

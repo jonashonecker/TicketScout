@@ -17,7 +17,7 @@ export default function MainPage({ user }: Readonly<MainPageProps>) {
 
   return (
     <>
-      <NavBar navbarContext={"main"} user={user} />
+      <NavBar user={user} />
       <Container maxWidth="xl" sx={{ p: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <SearchForm setSearchResults={setSearchResults} />

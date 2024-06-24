@@ -3,22 +3,21 @@ import { User } from "../../types/User.ts";
 
 type ProtectedRouteProps = {
   user: User | undefined | null;
-  target: "main" | "login";
+  isTargetLoginPage: boolean;
 };
 
 export default function ProtectedRoute({
   user,
-  target,
+  isTargetLoginPage,
 }: Readonly<ProtectedRouteProps>) {
   if (user === undefined) {
     return <div>Loading...</div>;
   }
 
-  if (target === "main") {
-    return user ? <Outlet /> : <Navigate to="/login" />;
-  }
-
-  if (target === "login") {
+  //When user is logged in, don't show login page
+  if (isTargetLoginPage) {
     return user ? <Navigate to="/" /> : <Outlet />;
   }
+
+  return user ? <Outlet /> : <Navigate to="/login" />;
 }
