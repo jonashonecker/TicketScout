@@ -2,7 +2,6 @@ import NavBar from "../navbar/NavBar.tsx";
 import { User } from "../../types/User.ts";
 import { Button, Container, Stack, TextField } from "@mui/material";
 import StatusChip from "../chips/StatusChip.tsx";
-import Divider from "@mui/material/Divider";
 import RichTextEditor from "../richtexteditor/RichTextEditor.tsx";
 
 type NewTicketPageProps = {
@@ -21,10 +20,9 @@ export default function NewTicketPage({ user }: NewTicketPageProps) {
           size="small"
           placeholder="Enter ticket title"
         />
-        <Stack direction="row" sx={{ my: 1 }}>
+        <Stack direction="row" sx={{ mt: 2, mb: 1 }}>
           <StatusChip ticketStatus={"OPEN"} />
         </Stack>
-        <Divider />
         <RichTextEditor user={user} />
         <Stack
           direction="row"
