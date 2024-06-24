@@ -1,6 +1,6 @@
 import NavBar from "../navbar/NavBar.tsx";
 import { User } from "../../types/User.ts";
-import { Container, Stack, TextField } from "@mui/material";
+import { Button, Container, Stack, TextField } from "@mui/material";
 import StatusChip from "../chips/StatusChip.tsx";
 import Divider from "@mui/material/Divider";
 import RichTextEditor from "../richtexteditor/RichTextEditor.tsx";
@@ -26,6 +26,29 @@ export default function NewTicketPage({ user }: NewTicketPageProps) {
         </Stack>
         <Divider />
         <RichTextEditor user={user} />
+        <Stack
+          direction="row"
+          justifyContent={"end"}
+          spacing={1}
+          sx={{ mt: 2 }}
+        >
+          <Button
+            variant="outlined"
+            size={"small"}
+            sx={{
+              fontWeight: "bold",
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size={"small"}
+            sx={{ fontWeight: "bold" }}
+          >
+            Save
+          </Button>
+        </Stack>
       </Container>
     </>
   );
