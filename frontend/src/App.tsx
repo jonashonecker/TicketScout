@@ -42,7 +42,7 @@ export default function App() {
         <Route
           element={<ProtectedRoute user={user} isTargetLoginPage={false} />}
         >
-          <Route path="/newticket" element={<NewTicketPage />} />
+          <Route path="/newticket" element={<NewTicketPage user={user} />} />
         </Route>
       </Routes>
     </Theme>
