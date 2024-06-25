@@ -32,6 +32,11 @@ export default function MainMenuButton({ setOpenDrawer }: MainMenuButtonProps) {
     setAnchorEl(null);
   }
 
+  function navigateToSearch() {
+    navigate("/");
+    setAnchorEl(null);
+  }
+
   return (
     <>
       <IconButton
@@ -56,7 +61,7 @@ export default function MainMenuButton({ setOpenDrawer }: MainMenuButtonProps) {
         onClose={handleClose}
       >
         <MenuList>
-          <MenuItem onClick={() => navigate("/")}>
+          <MenuItem onClick={navigateToSearch}>
             <ListItemIcon>
               <SearchIcon fontSize="small" />
             </ListItemIcon>
