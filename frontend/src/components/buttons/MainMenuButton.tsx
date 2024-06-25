@@ -7,12 +7,16 @@ import {
   MenuItem,
   MenuList,
 } from "@mui/material";
-import { MouseEvent, useState } from "react";
+import { Dispatch, MouseEvent, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
-export default function MainMenuButton() {
+type MainMenuButtonProps = {
+  setOpenDrawer: Dispatch<SetStateAction<boolean>>;
+};
+
+export default function MainMenuButton({ setOpenDrawer }: MainMenuButtonProps) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const handleMenu = (event: MouseEvent<HTMLElement>) => {
@@ -22,6 +26,11 @@ export default function MainMenuButton() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  function openNewTicketForm() {
+    setOpenDrawer(true);
+    setAnchorEl(null);
+  }
 
   return (
     <>
@@ -53,7 +62,7 @@ export default function MainMenuButton() {
             </ListItemIcon>
             <ListItemText>Search</ListItemText>
           </MenuItem>
-          <MenuItem onClick={() => navigate("/newticket")}>
+          <MenuItem onClick={openNewTicketForm}>
             <ListItemIcon>
               <AddCircleOutlineIcon fontSize="small" />
             </ListItemIcon>

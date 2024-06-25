@@ -6,7 +6,6 @@ import axios from "axios";
 import ProtectedRoute from "./components/utils/ProtectedRoute.tsx";
 import { User } from "./types/User.ts";
 import Theme from "./components/theme/Theme.tsx";
-import NewTicketPage from "./components/pages/NewTicketPage.tsx";
 import { Ticket } from "./types/Ticket.ts";
 
 export default function App() {
@@ -51,11 +50,6 @@ export default function App() {
               />
             }
           />
-        </Route>
-        <Route
-          element={<ProtectedRoute user={user} isTargetLoginPage={false} />}
-        >
-          <Route path="/newticket" element={<NewTicketPage user={user} />} />
         </Route>
       </Routes>
     </Theme>
