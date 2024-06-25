@@ -1,4 +1,4 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Box, Button, FormHelperText, Stack, TextField } from "@mui/material";
 import StatusChip from "../chips/StatusChip.tsx";
 import RichTextEditor from "../richtexteditor/RichTextEditor.tsx";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -16,19 +16,34 @@ export default function NewTicketForm({
   const [title, setTitle] = useState<string>("");
   const [titleError, setTitleError] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
-
+  const [descriptionError, setDescriptionError] = useState<boolean>(false);
   function cancel() {
     setOpenDrawer(false);
   }
 
   function save() {
-    if (!title.trim()) {
-      setTitleError(true);
-    } else {
+    const isTitleError = !title.trim();
+    const isDescriptionError = !checkIfHtmlContainsValue(description);
+
+    setTitleError(isTitleError);
+    setDescriptionError(isDescriptionError);
+
+    if (!isTitleError && !isDescriptionError) {
       console.log(title);
       console.log(description);
-      setTitleError(false);
     }
+  }
+
+  function checkIfHtmlContainsValue(htmlString: string) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, "text/html");
+    const allElements = doc.querySelectorAll("*");
+    for (const element of allElements) {
+      if (element.textContent) {
+        return true;
+      }
+    }
+    return false;
   }
 
   return (
@@ -48,7 +63,32 @@ export default function NewTicketForm({
       <Stack direction="row" sx={{ mt: 2, mb: 1 }}>
         <StatusChip ticketStatus={"OPEN"} />
       </Stack>
-      <RichTextEditor user={user} setDescription={setDescription} />
+      <Box
+        sx={{
+          border: (theme) =>
+            descriptionError
+              ? `1px solid ${theme.palette.error.main}`
+              : `1px solid ${theme.palette.divider}`,
+        }}
+      >
+        <RichTextEditor
+          user={user}
+          description={description}
+          setDescription={setDescription}
+        />
+      </Box>
+      {descriptionError && (
+        <FormHelperText
+          sx={{
+            mt: 0.5,
+            mx: 1.75,
+            position: "absolute",
+          }}
+          error
+        >
+          A description is required
+        </FormHelperText>
+      )}
       <Stack direction="row" justifyContent={"end"} spacing={1} sx={{ mt: 2 }}>
         <Button
           onClick={cancel}

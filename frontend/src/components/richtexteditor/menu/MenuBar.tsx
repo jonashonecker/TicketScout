@@ -1,4 +1,4 @@
-import { useCurrentEditor } from "@tiptap/react";
+import { Editor } from "@tiptap/react";
 import ToggleButton from "@mui/material/ToggleButton";
 import FormatBoldIcon from "@mui/icons-material/FormatBold";
 import FormatItalicIcon from "@mui/icons-material/FormatItalic";
@@ -18,15 +18,11 @@ import { AccountCircle } from "@mui/icons-material";
 
 type MenuBarProps = {
   user: User | null | undefined;
+  editor: Editor;
 };
 
-export default function MenuBar({ user }: MenuBarProps) {
-  const { editor } = useCurrentEditor();
+export default function MenuBar({ user, editor }: MenuBarProps) {
   const theme = useTheme();
-
-  if (!editor) {
-    return null;
-  }
 
   const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     [`& .${toggleButtonGroupClasses.grouped}`]: {

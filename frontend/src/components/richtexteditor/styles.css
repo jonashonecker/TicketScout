@@ -5,6 +5,7 @@
     --purple-light: #6a00f5;
     --gray-3: #e7e4e2;
     --gray-2: #f7f6f5;
+    --gray-4: #c2bdba;
 }
 
 /* Basic editor styles */
@@ -115,4 +116,13 @@
 }
 .tiptap img.ProseMirror-selectednode {
     outline: 3px solid var(--purple);
+}
+
+/*Placeholder*/
+.tiptap .is-empty::before {
+    color: var(--gray-4);
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
 }
