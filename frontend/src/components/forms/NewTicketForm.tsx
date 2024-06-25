@@ -14,6 +14,7 @@ export default function NewTicketForm({
   setOpenDrawer,
 }: NewTicketFormProps) {
   const [title, setTitle] = useState<string>("");
+  const [titleError, setTitleError] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
 
   function cancel() {
@@ -21,8 +22,13 @@ export default function NewTicketForm({
   }
 
   function save() {
-    console.log(title);
-    console.log(description);
+    if (!title.trim()) {
+      setTitleError(true);
+    } else {
+      console.log(title);
+      console.log(description);
+      setTitleError(false);
+    }
   }
 
   return (
@@ -32,7 +38,9 @@ export default function NewTicketForm({
         label="Title"
         id="outlined-size-small"
         size="small"
-        placeholder="Enter ticket title"
+        required
+        error={titleError}
+        helperText={titleError ? "Title is required" : "Enter ticket title"}
         onChange={(event) => {
           setTitle(event.target.value);
         }}

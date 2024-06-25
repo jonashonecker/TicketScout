@@ -12,7 +12,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import SearchForm from "../inputs/SearchForm.tsx";
+import SearchForm from "../forms/SearchForm.tsx";
 import NewTicketForm from "../forms/NewTicketForm.tsx";
 
 type MainPageProps = {
