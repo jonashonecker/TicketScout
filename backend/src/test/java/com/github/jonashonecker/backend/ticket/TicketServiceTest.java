@@ -2,6 +2,7 @@ package com.github.jonashonecker.backend.ticket;
 
 import com.github.jonashonecker.backend.ticket.domain.Status;
 import com.github.jonashonecker.backend.ticket.domain.Ticket;
+import com.github.jonashonecker.backend.user.UserService;
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +15,10 @@ import static org.mockito.Mockito.when;
 class TicketServiceTest {
 
     private final TicketRepository ticketRepository = mock();
+    private final IdService idService = mock();
+    private final UserService userService = mock();
 
-    private final TicketService ticketService = new TicketService(ticketRepository);
+    private final TicketService ticketService = new TicketService(ticketRepository, idService, userService);
 
     @Test
     void getAllTickets_whenRepositoryEmpty_returnEmptyList() {
