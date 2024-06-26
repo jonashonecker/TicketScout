@@ -1,6 +1,6 @@
 import { Box, Button, FormHelperText, Stack, TextField } from "@mui/material";
-import StatusChip from "../chips/StatusChip.tsx";
-import RichTextEditor from "../richtexteditor/RichTextEditor.tsx";
+import StatusChip from "../chip/StatusChip.tsx";
+import RichTextEditor from "../editor/RichTextEditor.tsx";
 import { Dispatch, SetStateAction, useState } from "react";
 import { User } from "../../types/User.ts";
 import axios from "axios";

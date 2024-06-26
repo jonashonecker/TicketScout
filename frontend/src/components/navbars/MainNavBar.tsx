@@ -1,6 +1,6 @@
 import { AppBar, Box, Toolbar } from "@mui/material";
 import { styled } from "@mui/system";
-import Logo from "../logos/Logo.tsx";
+import Logo from "../logo/Logo.tsx";
 import UserMenuButton from "../buttons/UserMenuButton.tsx";
 import MainMenuButton from "../buttons/MainMenuButton.tsx";
 import { User } from "../../types/User.ts";
