@@ -1,11 +1,11 @@
-import NavBar from "../navbar/NavBar.tsx";
 import LoginButton from "../buttons/LoginButton.tsx";
 import { Box, Container, Typography } from "@mui/material";
+import LoginNavBar from "../navbars/LoginNavBar.tsx";
 
 export default function LoginPage() {
   return (
     <>
-      <NavBar />
+      <LoginNavBar />
       <Container maxWidth="xs">
         <Box
           sx={{

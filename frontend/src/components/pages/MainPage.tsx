@@ -1,4 +1,4 @@
-import NavBar from "../navbar/NavBar.tsx";
+import MainNavBar from "../navbars/MainNavBar.tsx";
 import { User } from "../../types/User.ts";
 import { Ticket } from "../../types/Ticket.ts";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -33,7 +33,7 @@ export default function MainPage({
 
   return (
     <>
-      <NavBar user={user} setOpenDrawer={setOpenDrawer} />
+      <MainNavBar user={user} setOpenDrawer={setOpenDrawer} />
       <Container maxWidth="xl" sx={{ p: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <SearchForm setSearchResults={setSearchResults} />

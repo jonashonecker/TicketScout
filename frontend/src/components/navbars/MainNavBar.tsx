@@ -7,7 +7,7 @@ import { User } from "../../types/User.ts";
 import { Dispatch, SetStateAction } from "react";
 
 type NavBarProps = {
-  user?: User | null;
+  user: User | null | undefined;
   setOpenDrawer: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -15,7 +15,10 @@ const StyledAppBar = styled(AppBar)({
   boxShadow: "none",
 });
 
-export default function NavBar({ user, setOpenDrawer }: Readonly<NavBarProps>) {
+export default function MainNavBar({
+  user,
+  setOpenDrawer,
+}: Readonly<NavBarProps>) {
   return (
     <StyledAppBar position={"sticky"}>
       <Toolbar>
