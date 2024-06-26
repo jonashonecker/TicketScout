@@ -16,7 +16,9 @@ type MainMenuButtonProps = {
   setOpenDrawer: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function MainMenuButton({ setOpenDrawer }: MainMenuButtonProps) {
+export default function MainMenuButton({
+  setOpenDrawer,
+}: Readonly<MainMenuButtonProps>) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const handleMenu = (event: MouseEvent<HTMLElement>) => {

@@ -12,7 +12,7 @@ type NewTicketFormProps = {
 export default function NewTicketForm({
   user,
   setOpenDrawer,
-}: NewTicketFormProps) {
+}: Readonly<NewTicketFormProps>) {
   const [title, setTitle] = useState<string>("");
   const [titleError, setTitleError] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");

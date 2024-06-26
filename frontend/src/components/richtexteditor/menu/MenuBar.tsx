@@ -21,7 +21,7 @@ type MenuBarProps = {
   editor: Editor;
 };
 
-export default function MenuBar({ user, editor }: MenuBarProps) {
+export default function MenuBar({ user, editor }: Readonly<MenuBarProps>) {
   const theme = useTheme();
 
   const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({

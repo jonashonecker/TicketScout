@@ -31,6 +31,13 @@ export default function MainPage({
   const isVeryLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  function getDrawerWidth() {
+    if (isVerySmallScreen) {
+      return "100%";
+    }
+    return isVeryLargeScreen ? "50%" : "75%";
+  }
+
   return (
     <>
       <MainNavBar user={user} setOpenDrawer={setOpenDrawer} />
@@ -61,11 +68,7 @@ export default function MainPage({
         }}
         PaperProps={{
           sx: {
-            width: isVerySmallScreen
-              ? "100%"
-              : isVeryLargeScreen
-                ? "50%"
-                : "75%",
+            width: getDrawerWidth(),
             height: isVerySmallScreen ? "75%" : "100%",
           },
         }}

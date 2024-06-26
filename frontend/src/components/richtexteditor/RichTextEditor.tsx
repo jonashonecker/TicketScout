@@ -17,7 +17,7 @@ export default function RichTextEditor({
   user,
   setDescription,
   description,
-}: RichTextEditorProps) {
+}: Readonly<RichTextEditorProps>) {
   const extensions = [
     StarterKit,
     Image,
