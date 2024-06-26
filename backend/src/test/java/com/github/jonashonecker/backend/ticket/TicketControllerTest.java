@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -210,5 +211,24 @@ class TicketControllerTest {
                         containsString("Input validation failed for title (Title must not be empty) and description (Description must not be empty)"),
                         containsString("Input validation failed for description (Description must not be empty) and title (Title must not be empty)")
                 )));
+    }
+
+    @Test
+    @DirtiesContext
+    @WithMockUser
+    void createTicket_whenInvalidUser_thenReturnApiErrorMessage() throws Exception {
+        //GIVEN
+        //WHEN
+        mockMvc.perform(post("/api/ticket")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "test-title",
+                                  "description": "test-description"
+                                }
+                                """))
+                //THEN
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("There is an issue with your user login. Please contact support."));
     }
 }
