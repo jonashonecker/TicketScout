@@ -12,6 +12,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.anyOf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -133,5 +135,80 @@ class TicketControllerTest {
                 .andExpect(jsonPath("$.author.name").value(ticketScoutUser.name()))
                 .andExpect(jsonPath("$.author.avatarUrl").value(ticketScoutUser.avatarUrl()));
 
+    }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void createTicket_whenInvalidTicketTitle_thenReturnApiErrorMessage() throws Exception {
+        //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("testUser", "testAvatarUrl");
+
+        //WHEN
+        mockMvc.perform(post("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", ticketScoutUser.name())
+                                .claim("avatar_url", ticketScoutUser.avatarUrl())
+                        ))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "",
+                                  "description": "test-description"
+                                }
+                                """))
+                //THEN
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Input validation failed for title (Title must not be empty)"));
+    }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void createTicket_whenInvalidDescription_thenReturnApiErrorMessage() throws Exception {
+        //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("testUser", "testAvatarUrl");
+
+        //WHEN
+        mockMvc.perform(post("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", ticketScoutUser.name())
+                                .claim("avatar_url", ticketScoutUser.avatarUrl())
+                        ))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "test-title",
+                                  "description": ""
+                                }
+                                """))
+                //THEN
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Input validation failed for description (Description must not be empty)"));
+    }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void createTicket_whenInvalidTitleAndDescription_thenReturnApiErrorMessage() throws Exception {
+        //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("testUser", "testAvatarUrl");
+
+        //WHEN
+        mockMvc.perform(post("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", ticketScoutUser.name())
+                                .claim("avatar_url", ticketScoutUser.avatarUrl())
+                        ))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "",
+                                  "description": ""
+                                }
+                                """))
+                //THEN
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", anyOf(
+                        containsString("Input validation failed for title (Title must not be empty) and description (Description must not be empty)"),
+                        containsString("Input validation failed for description (Description must not be empty) and title (Title must not be empty)")
+                )));
     }
 }
