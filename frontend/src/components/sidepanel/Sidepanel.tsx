@@ -11,7 +11,7 @@ export default function Sidepanel({
   openDrawer,
   setOpenDrawer,
   children,
-}: SidepanelProps) {
+}: Readonly<SidepanelProps>) {
   const theme = useTheme();
   const isVeryLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
