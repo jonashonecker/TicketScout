@@ -1,23 +1,54 @@
-import NavBar from "../navbar/NavBar.tsx";
+import MainNavBar from "../navbars/MainNavBar.tsx";
 import { User } from "../../types/User.ts";
 import { Ticket } from "../../types/Ticket.ts";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import TicketCard from "../cards/TicketCard.tsx";
-import { Box, Container, Grid, Grow } from "@mui/material";
-import SearchForm from "../inputs/SearchForm.tsx";
+import {
+  Box,
+  Container,
+  Drawer,
+  Grid,
+  Grow,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import SearchForm from "../forms/SearchForm.tsx";
+import NewTicketForm from "../forms/NewTicketForm.tsx";
+import ApiStatusSnackbar from "../snackbars/ApiStatusSnackbar.tsx";
+import { ApiResponseStatusSnackbar } from "../../types/Api.ts";
 
 type MainPageProps = {
   user: User | null | undefined;
+  searchResults: Ticket[] | undefined;
+  setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
 };
 
-export default function MainPage({ user }: Readonly<MainPageProps>) {
-  const [searchResults, setSearchResults] = useState<Ticket[] | undefined>(
-    undefined,
-  );
+export default function MainPage({
+  user,
+  searchResults,
+  setSearchResults,
+}: Readonly<MainPageProps>) {
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [apiRequestStatusSnackbar, setApiRequestStatusSnackbar] =
+    useState<ApiResponseStatusSnackbar>({
+      open: false,
+      severity: "error",
+      message: "Initial value",
+    });
+  const theme = useTheme();
+  const isVeryLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
+  const isVerySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  function getDrawerWidth() {
+    if (isVerySmallScreen) {
+      return "100%";
+    }
+    return isVeryLargeScreen ? "50%" : "75%";
+  }
 
   return (
     <>
-      <NavBar navbarContext={"main"} user={user} />
+      <MainNavBar user={user} setOpenDrawer={setOpenDrawer} />
       <Container maxWidth="xl" sx={{ p: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <SearchForm setSearchResults={setSearchResults} />
@@ -37,6 +68,32 @@ export default function MainPage({ user }: Readonly<MainPageProps>) {
           ))}
         </Grid>
       </Container>
+      <Drawer
+        anchor={isVerySmallScreen ? "bottom" : "right"}
+        open={openDrawer}
+        onClose={() => {
+          setOpenDrawer(false);
+        }}
+        PaperProps={{
+          sx: {
+            width: getDrawerWidth(),
+            height: isVerySmallScreen ? "75%" : "100%",
+          },
+        }}
+      >
+        <Container sx={{ p: 3 }}>
+          <NewTicketForm
+            user={user}
+            setOpenDrawer={setOpenDrawer}
+            apiRequestStatusSnackbar={apiRequestStatusSnackbar}
+            setApiRequestStatusSnackbar={setApiRequestStatusSnackbar}
+          />
+        </Container>
+      </Drawer>
+      <ApiStatusSnackbar
+        apiRequestStatusSnackbar={apiRequestStatusSnackbar}
+        setApiRequestStatusSnackbar={setApiRequestStatusSnackbar}
+      />
     </>
   );
 }
