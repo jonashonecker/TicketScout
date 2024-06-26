@@ -14,6 +14,8 @@ import {
 } from "@mui/material";
 import SearchForm from "../forms/SearchForm.tsx";
 import NewTicketForm from "../forms/NewTicketForm.tsx";
+import ApiStatusSnackbar from "../snackbars/ApiStatusSnackbar.tsx";
+import { ApiResponseStatusSnackbar } from "../../types/Api.ts";
 
 type MainPageProps = {
   user: User | null | undefined;
@@ -27,6 +29,12 @@ export default function MainPage({
   setSearchResults,
 }: Readonly<MainPageProps>) {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [apiRequestStatusSnackbar, setApiRequestStatusSnackbar] =
+    useState<ApiResponseStatusSnackbar>({
+      open: false,
+      severity: "error",
+      message: "Initial value",
+    });
   const theme = useTheme();
   const isVeryLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -74,9 +82,18 @@ export default function MainPage({
         }}
       >
         <Container sx={{ p: 3 }}>
-          <NewTicketForm user={user} setOpenDrawer={setOpenDrawer} />
+          <NewTicketForm
+            user={user}
+            setOpenDrawer={setOpenDrawer}
+            apiRequestStatusSnackbar={apiRequestStatusSnackbar}
+            setApiRequestStatusSnackbar={setApiRequestStatusSnackbar}
+          />
         </Container>
       </Drawer>
+      <ApiStatusSnackbar
+        apiRequestStatusSnackbar={apiRequestStatusSnackbar}
+        setApiRequestStatusSnackbar={setApiRequestStatusSnackbar}
+      />
     </>
   );
 }

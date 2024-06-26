@@ -3,15 +3,22 @@ import StatusChip from "../chips/StatusChip.tsx";
 import RichTextEditor from "../richtexteditor/RichTextEditor.tsx";
 import { Dispatch, SetStateAction, useState } from "react";
 import { User } from "../../types/User.ts";
+import axios from "axios";
+import { ApiResponseStatusSnackbar } from "../../types/Api.ts";
 
 type NewTicketFormProps = {
   user: User | null | undefined;
   setOpenDrawer: Dispatch<SetStateAction<boolean>>;
+  apiRequestStatusSnackbar: ApiResponseStatusSnackbar;
+  setApiRequestStatusSnackbar: Dispatch<
+    SetStateAction<ApiResponseStatusSnackbar>
+  >;
 };
 
 export default function NewTicketForm({
   user,
   setOpenDrawer,
+  setApiRequestStatusSnackbar,
 }: Readonly<NewTicketFormProps>) {
   const [title, setTitle] = useState<string>("");
   const [titleError, setTitleError] = useState<boolean>(false);
@@ -29,8 +36,23 @@ export default function NewTicketForm({
     setDescriptionError(isDescriptionError);
 
     if (!isTitleError && !isDescriptionError) {
-      console.log(title);
-      console.log(description);
+      axios
+        .post("/api/ticket", { title: title, description: description })
+        .then(() => {
+          setApiRequestStatusSnackbar({
+            open: true,
+            severity: "success",
+            message: "Ticket created successfully!",
+          });
+          setOpenDrawer(false);
+        })
+        .catch((error) => {
+          setApiRequestStatusSnackbar({
+            open: true,
+            severity: "error",
+            message: error.response.data.error,
+          });
+        });
     }
   }
 
