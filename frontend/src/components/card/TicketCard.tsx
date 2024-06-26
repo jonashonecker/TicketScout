@@ -1,5 +1,5 @@
 import { Avatar, Card, CardContent, Stack, Typography } from "@mui/material";
-import StatusChip from "../chips/StatusChip.tsx";
+import StatusChip from "../chip/StatusChip.tsx";
 import { Ticket } from "../../types/Ticket.ts";
 
 type TicketCardProps = {

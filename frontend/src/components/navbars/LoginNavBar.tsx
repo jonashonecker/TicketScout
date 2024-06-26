@@ -1,6 +1,6 @@
 import { AppBar, Toolbar } from "@mui/material";
 import { styled } from "@mui/system";
-import Logo from "../logos/Logo.tsx";
+import Logo from "../logo/Logo.tsx";
 
 const StyledAppBar = styled(AppBar)({
   boxShadow: "none",

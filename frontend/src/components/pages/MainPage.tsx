@@ -2,20 +2,13 @@ import MainNavBar from "../navbars/MainNavBar.tsx";
 import { User } from "../../types/User.ts";
 import { Ticket } from "../../types/Ticket.ts";
 import { Dispatch, SetStateAction, useState } from "react";
-import TicketCard from "../cards/TicketCard.tsx";
-import {
-  Box,
-  Container,
-  Drawer,
-  Grid,
-  Grow,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import TicketCard from "../card/TicketCard.tsx";
+import { Box, Container, Grid, Grow } from "@mui/material";
 import SearchForm from "../forms/SearchForm.tsx";
 import NewTicketForm from "../forms/NewTicketForm.tsx";
-import ApiStatusSnackbar from "../snackbars/ApiStatusSnackbar.tsx";
+import ApiStatusSnackbar from "../snackbar/ApiStatusSnackbar.tsx";
 import { ApiResponseStatusSnackbar } from "../../types/Api.ts";
+import Sidepanel from "../sidepanel/Sidepanel.tsx";
 
 type MainPageProps = {
   user: User | null | undefined;
@@ -35,16 +28,6 @@ export default function MainPage({
       severity: "error",
       message: "Initial value",
     });
-  const theme = useTheme();
-  const isVeryLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
-  const isVerySmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
-  function getDrawerWidth() {
-    if (isVerySmallScreen) {
-      return "100%";
-    }
-    return isVeryLargeScreen ? "50%" : "75%";
-  }
 
   return (
     <>
@@ -68,19 +51,7 @@ export default function MainPage({
           ))}
         </Grid>
       </Container>
-      <Drawer
-        anchor={isVerySmallScreen ? "bottom" : "right"}
-        open={openDrawer}
-        onClose={() => {
-          setOpenDrawer(false);
-        }}
-        PaperProps={{
-          sx: {
-            width: getDrawerWidth(),
-            height: isVerySmallScreen ? "75%" : "100%",
-          },
-        }}
-      >
+      <Sidepanel openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}>
         <Container sx={{ p: 3 }}>
           <NewTicketForm
             user={user}
@@ -89,7 +60,7 @@ export default function MainPage({
             setApiRequestStatusSnackbar={setApiRequestStatusSnackbar}
           />
         </Container>
-      </Drawer>
+      </Sidepanel>
       <ApiStatusSnackbar
         apiRequestStatusSnackbar={apiRequestStatusSnackbar}
         setApiRequestStatusSnackbar={setApiRequestStatusSnackbar}
