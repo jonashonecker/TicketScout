@@ -1,10 +1,13 @@
-import { Box, Button, FormHelperText, Stack, TextField } from "@mui/material";
+import { Stack } from "@mui/material";
 import StatusChip from "../chip/StatusChip.tsx";
-import RichTextEditor from "../editor/RichTextEditor.tsx";
 import { Dispatch, SetStateAction, useState } from "react";
 import { User } from "../../types/User.ts";
 import axios from "axios";
 import { ApiResponseStatusSnackbar } from "../../types/Api.ts";
+import CancelButton from "../buttons/CancelButton.tsx";
+import SaveButton from "../buttons/SaveButton.tsx";
+import TicketTitleInput from "../inputs/TicketTitleInput.tsx";
+import TicketDescriptionInput from "../inputs/TicketDescriptionInput.tsx";
 
 type NewTicketFormProps = {
   user: User | null | undefined;
@@ -70,66 +73,19 @@ export default function NewTicketForm({
 
   return (
     <>
-      <TextField
-        fullWidth
-        label="Title"
-        id="outlined-size-small"
-        size="small"
-        required
-        error={titleError}
-        helperText={titleError ? "Title is required" : "Enter ticket title"}
-        onChange={(event) => {
-          setTitle(event.target.value);
-        }}
-      />
+      <TicketTitleInput titleError={titleError} setTitle={setTitle} />
       <Stack direction="row" sx={{ mt: 2, mb: 1 }}>
         <StatusChip ticketStatus={"OPEN"} />
       </Stack>
-      <Box
-        sx={{
-          border: (theme) =>
-            descriptionError
-              ? `1px solid ${theme.palette.error.main}`
-              : `1px solid ${theme.palette.divider}`,
-        }}
-      >
-        <RichTextEditor
-          user={user}
-          description={description}
-          setDescription={setDescription}
-        />
-      </Box>
-      {descriptionError && (
-        <FormHelperText
-          sx={{
-            mt: 0.5,
-            mx: 1.75,
-            position: "absolute",
-          }}
-          error
-        >
-          A description is required
-        </FormHelperText>
-      )}
+      <TicketDescriptionInput
+        user={user}
+        description={description}
+        setDescription={setDescription}
+        descriptionError={descriptionError}
+      />
       <Stack direction="row" justifyContent={"end"} spacing={1} sx={{ mt: 2 }}>
-        <Button
-          onClick={cancel}
-          variant="outlined"
-          size={"small"}
-          sx={{
-            fontWeight: "bold",
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={save}
-          variant="contained"
-          size={"small"}
-          sx={{ fontWeight: "bold" }}
-        >
-          Save
-        </Button>
+        <CancelButton onClick={cancel} />
+        <SaveButton onClick={save} />
       </Stack>
     </>
   );
