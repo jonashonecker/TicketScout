@@ -11,9 +11,10 @@ import { Dispatch, MouseEvent, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
 
 type MainMenuButtonProps = {
-  setSidepanelStatus: Dispatch<SetStateAction<boolean>>;
+  setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
 };
 
 export default function MainMenuButton({
@@ -30,7 +31,11 @@ export default function MainMenuButton({
   };
 
   function openNewTicketForm() {
-    setSidepanelStatus(true);
+    setSidepanelStatus({
+      open: true,
+      newTicket: true,
+      updateTicket: false,
+    });
     setAnchorEl(null);
   }
 

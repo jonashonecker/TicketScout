@@ -9,15 +9,18 @@ import TicketTitleInput from "../inputs/TicketTitleInput.tsx";
 import TicketDescriptionInput from "../inputs/TicketDescriptionInput.tsx";
 import ApiUtils from "../utils/ApiRequests.tsx";
 import Validation from "../utils/Validation.tsx";
+import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
 
 type TicketFormProps = {
   user: User | null | undefined;
-  setSidepanelStatus: Dispatch<SetStateAction<boolean>>;
+  sidePanelStatus: SidepanelStatus;
+  setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
   setSnackbarStatus: Dispatch<SetStateAction<SnackbarStatus>>;
 };
 
 export default function TicketForm({
   user,
+  sidePanelStatus,
   setSidepanelStatus,
   setSnackbarStatus,
 }: Readonly<TicketFormProps>) {
@@ -27,7 +30,7 @@ export default function TicketForm({
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
 
   function cancel() {
-    setSidepanelStatus(false);
+    setSidepanelStatus({ ...sidePanelStatus, open: false });
   }
 
   function save() {
@@ -45,7 +48,7 @@ export default function TicketForm({
             severity: "success",
             message: "Ticket created successfully!",
           });
-          setSidepanelStatus(false);
+          setSidepanelStatus({ ...sidePanelStatus, open: false });
         })
         .catch((error) => {
           setSnackbarStatus({

@@ -9,6 +9,7 @@ import ApiStatusSnackbar from "../snackbar/ApiStatusSnackbar.tsx";
 import { SnackbarStatus } from "../../types/SnackbarStatus.ts";
 import Sidepanel from "../sidepanel/Sidepanel.tsx";
 import TicketCardsGrid from "../layout/TicketCardsGrid.tsx";
+import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
 
 type MainPageProps = {
   user: User | null | undefined;
@@ -21,7 +22,11 @@ export default function MainPage({
   searchResults,
   setSearchResults,
 }: Readonly<MainPageProps>) {
-  const [sidepanelStatus, setSidepanelStatus] = useState<boolean>(false);
+  const [sidepanelStatus, setSidepanelStatus] = useState<SidepanelStatus>({
+    open: false,
+    updateTicket: false,
+    newTicket: false,
+  });
   const [snackbarStatus, setSnackbarStatus] = useState<SnackbarStatus>({
     open: false,
     severity: "error",
@@ -44,6 +49,7 @@ export default function MainPage({
         <Container sx={{ p: 3 }}>
           <TicketForm
             user={user}
+            sidePanelStatus={sidepanelStatus}
             setSidepanelStatus={setSidepanelStatus}
             setSnackbarStatus={setSnackbarStatus}
           />
