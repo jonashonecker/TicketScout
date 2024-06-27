@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import StatusChip from "../chip/StatusChip.tsx";
+import TicketStatusChip from "../chip/TicketStatusChip.tsx";
 import { Dispatch, SetStateAction, useState } from "react";
 import { User } from "../../types/User.ts";
 import axios from "axios";
@@ -75,7 +75,7 @@ export default function NewTicketForm({
     <>
       <TicketTitleInput titleError={titleError} setTitle={setTitle} />
       <Stack direction="row" sx={{ mt: 2, mb: 1 }}>
-        <StatusChip ticketStatus={"OPEN"} />
+        <TicketStatusChip ticketStatus={"OPEN"} />
       </Stack>
       <TicketDescriptionInput
         user={user}

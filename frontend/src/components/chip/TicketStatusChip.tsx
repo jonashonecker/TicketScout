@@ -16,7 +16,7 @@ const statusStyles: Record<
   IN_PROGRESS: { label: "In Progress", statusKey: "inProgress" },
 };
 
-export default function StatusChip({
+export default function TicketStatusChip({
   ticketStatus,
 }: Readonly<StatusChipProps>) {
   const theme = useTheme();

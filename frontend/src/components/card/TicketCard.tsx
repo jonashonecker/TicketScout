@@ -1,5 +1,5 @@
 import { Avatar, Card, CardContent, Stack, Typography } from "@mui/material";
-import StatusChip from "../chip/StatusChip.tsx";
+import TicketStatusChip from "../chip/TicketStatusChip.tsx";
 import { Ticket } from "../../types/Ticket.ts";
 
 type TicketCardProps = {
@@ -26,7 +26,7 @@ export default function TicketCard({ ticket }: Readonly<TicketCardProps>) {
           {ticket.title}
         </Typography>
         <Stack direction="row" spacing={1}>
-          <StatusChip ticketStatus={ticket.status} />
+          <TicketStatusChip ticketStatus={ticket.status} />
         </Stack>
       </CardContent>
     </Card>
