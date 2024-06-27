@@ -1,13 +1,17 @@
 import { Box, Grow, useMediaQuery, useTheme } from "@mui/material";
 import { Ticket } from "../../types/Ticket.ts";
 import TicketCard from "../card/TicketCard.tsx";
+import { Dispatch, SetStateAction } from "react";
+import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
 
 type TicketCardsGridProps = {
   searchResults: Ticket[] | undefined;
+  setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
 };
 
 export default function TicketCardsGrid({
   searchResults,
+  setSidepanelStatus,
 }: TicketCardsGridProps) {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.only("xs"));
@@ -45,7 +49,10 @@ export default function TicketCardsGrid({
           {column.map((ticket, index) => (
             <Grow in={true} timeout={500 + index * 100} key={ticket.id}>
               <Box>
-                <TicketCard ticket={ticket} />
+                <TicketCard
+                  ticket={ticket}
+                  setSidepanelStatus={setSidepanelStatus}
+                />
               </Box>
             </Grow>
           ))}

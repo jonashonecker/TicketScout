@@ -62,19 +62,27 @@ export default function TicketForm({
 
   return (
     <>
-      <TicketTitleInput titleError={titleError} setTitle={setTitle} />
+      <TicketTitleInput
+        titleError={titleError}
+        setTitle={setTitle}
+        sidePanelStatus={sidePanelStatus}
+      />
       <Stack direction="row" sx={{ mt: 2, mb: 1 }}>
         <TicketStatusChip ticketStatus={"OPEN"} />
       </Stack>
       <TicketDescriptionInput
         user={user}
-        description={description}
+        description={
+          sidePanelStatus.ticket
+            ? sidePanelStatus.ticket.description
+            : description
+        }
         setDescription={setDescription}
         descriptionError={descriptionError}
       />
       <Stack direction="row" justifyContent={"end"} spacing={1} sx={{ mt: 2 }}>
         <CancelButton onClick={cancel} />
-        <SaveButton onClick={save} />
+        {sidePanelStatus.newTicket && <SaveButton onClick={save} />}
       </Stack>
     </>
   );

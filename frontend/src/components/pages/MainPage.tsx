@@ -40,7 +40,10 @@ export default function MainPage({
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <SearchForm setSearchResults={setSearchResults} />
         </Box>
-        <TicketCardsGrid searchResults={searchResults} />
+        <TicketCardsGrid
+          searchResults={searchResults}
+          setSidepanelStatus={setSidepanelStatus}
+        />
       </Container>
       <Sidepanel
         sidepanelStatus={sidepanelStatus}
