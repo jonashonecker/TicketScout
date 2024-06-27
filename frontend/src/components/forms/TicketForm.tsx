@@ -12,13 +12,13 @@ import Validation from "../utils/Validation.tsx";
 
 type TicketFormProps = {
   user: User | null | undefined;
-  setOpenDrawer: Dispatch<SetStateAction<boolean>>;
+  setSidepanelStatus: Dispatch<SetStateAction<boolean>>;
   setSnackbarStatus: Dispatch<SetStateAction<SnackbarStatus>>;
 };
 
 export default function TicketForm({
   user,
-  setOpenDrawer,
+  setSidepanelStatus,
   setSnackbarStatus,
 }: Readonly<TicketFormProps>) {
   const [title, setTitle] = useState<string>("");
@@ -27,7 +27,7 @@ export default function TicketForm({
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
 
   function cancel() {
-    setOpenDrawer(false);
+    setSidepanelStatus(false);
   }
 
   function save() {
@@ -45,7 +45,7 @@ export default function TicketForm({
             severity: "success",
             message: "Ticket created successfully!",
           });
-          setOpenDrawer(false);
+          setSidepanelStatus(false);
         })
         .catch((error) => {
           setSnackbarStatus({

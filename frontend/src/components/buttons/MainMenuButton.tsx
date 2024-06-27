@@ -13,11 +13,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 type MainMenuButtonProps = {
-  setOpenDrawer: Dispatch<SetStateAction<boolean>>;
+  setSidepanelStatus: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function MainMenuButton({
-  setOpenDrawer,
+  setSidepanelStatus,
 }: Readonly<MainMenuButtonProps>) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -30,7 +30,7 @@ export default function MainMenuButton({
   };
 
   function openNewTicketForm() {
-    setOpenDrawer(true);
+    setSidepanelStatus(true);
     setAnchorEl(null);
   }
 

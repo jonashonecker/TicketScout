@@ -21,7 +21,7 @@ export default function MainPage({
   searchResults,
   setSearchResults,
 }: Readonly<MainPageProps>) {
-  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [sidepanelStatus, setSidepanelStatus] = useState<boolean>(false);
   const [snackbarStatus, setSnackbarStatus] = useState<SnackbarStatus>({
     open: false,
     severity: "error",
@@ -30,18 +30,21 @@ export default function MainPage({
 
   return (
     <>
-      <MainNavBar user={user} setOpenDrawer={setOpenDrawer} />
+      <MainNavBar user={user} setSidepanelStatus={setSidepanelStatus} />
       <Container fixed sx={{ p: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <SearchForm setSearchResults={setSearchResults} />
         </Box>
         <TicketCardsGrid searchResults={searchResults} />
       </Container>
-      <Sidepanel openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}>
+      <Sidepanel
+        sidepanelStatus={sidepanelStatus}
+        setSidepanelStatus={setSidepanelStatus}
+      >
         <Container sx={{ p: 3 }}>
           <TicketForm
             user={user}
-            setOpenDrawer={setOpenDrawer}
+            setSidepanelStatus={setSidepanelStatus}
             setSnackbarStatus={setSnackbarStatus}
           />
         </Container>

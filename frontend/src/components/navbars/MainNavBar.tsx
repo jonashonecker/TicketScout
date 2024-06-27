@@ -8,7 +8,7 @@ import { Dispatch, SetStateAction } from "react";
 
 type NavBarProps = {
   user: User | null | undefined;
-  setOpenDrawer: Dispatch<SetStateAction<boolean>>;
+  setSidepanelStatus: Dispatch<SetStateAction<boolean>>;
 };
 
 const StyledAppBar = styled(AppBar)({
@@ -17,12 +17,12 @@ const StyledAppBar = styled(AppBar)({
 
 export default function MainNavBar({
   user,
-  setOpenDrawer,
+  setSidepanelStatus,
 }: Readonly<NavBarProps>) {
   return (
     <StyledAppBar position={"sticky"}>
       <Toolbar>
-        {user && <MainMenuButton setOpenDrawer={setOpenDrawer} />}
+        {user && <MainMenuButton setSidepanelStatus={setSidepanelStatus} />}
         <Box sx={{ flexGrow: 1 }}>
           <Logo />
         </Box>
