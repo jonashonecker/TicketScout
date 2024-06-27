@@ -8,6 +8,7 @@ import SaveButton from "../buttons/SaveButton.tsx";
 import TicketTitleInput from "../inputs/TicketTitleInput.tsx";
 import TicketDescriptionInput from "../inputs/TicketDescriptionInput.tsx";
 import ApiUtils from "../utils/ApiRequests.tsx";
+import Validation from "../utils/Validation.tsx";
 
 type NewTicketFormProps = {
   user: User | null | undefined;
@@ -27,13 +28,14 @@ export default function NewTicketForm({
   const [titleError, setTitleError] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
+
   function cancel() {
     setOpenDrawer(false);
   }
 
   function save() {
     const isTitleError = !title.trim();
-    const isDescriptionError = !checkIfHtmlContainsValue(description);
+    const isDescriptionError = !Validation.checkIfHtmlContainsText(description);
 
     setTitleError(isTitleError);
     setDescriptionError(isDescriptionError);
@@ -56,18 +58,6 @@ export default function NewTicketForm({
           });
         });
     }
-  }
-
-  function checkIfHtmlContainsValue(htmlString: string) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlString, "text/html");
-    const allElements = doc.querySelectorAll("*");
-    for (const element of allElements) {
-      if (element.textContent) {
-        return true;
-      }
-    }
-    return false;
   }
 
   return (
