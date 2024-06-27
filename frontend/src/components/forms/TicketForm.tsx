@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import TicketStatusChip from "../chip/TicketStatusChip.tsx";
 import { Dispatch, SetStateAction, useState } from "react";
 import { User } from "../../types/User.ts";
-import { ApiResponseStatusSnackbar } from "../../types/Api.ts";
+import { SnackbarStatus } from "../../types/SnackbarStatus.ts";
 import CancelButton from "../buttons/CancelButton.tsx";
 import SaveButton from "../buttons/SaveButton.tsx";
 import TicketTitleInput from "../inputs/TicketTitleInput.tsx";
@@ -13,16 +13,13 @@ import Validation from "../utils/Validation.tsx";
 type TicketFormProps = {
   user: User | null | undefined;
   setOpenDrawer: Dispatch<SetStateAction<boolean>>;
-  apiRequestStatusSnackbar: ApiResponseStatusSnackbar;
-  setApiRequestStatusSnackbar: Dispatch<
-    SetStateAction<ApiResponseStatusSnackbar>
-  >;
+  setSnackbarStatus: Dispatch<SetStateAction<SnackbarStatus>>;
 };
 
 export default function TicketForm({
   user,
   setOpenDrawer,
-  setApiRequestStatusSnackbar,
+  setSnackbarStatus,
 }: Readonly<TicketFormProps>) {
   const [title, setTitle] = useState<string>("");
   const [titleError, setTitleError] = useState<boolean>(false);
@@ -43,7 +40,7 @@ export default function TicketForm({
     if (!isTitleError && !isDescriptionError) {
       ApiUtils.createNewTicket({ title: title, description: description })
         .then(() => {
-          setApiRequestStatusSnackbar({
+          setSnackbarStatus({
             open: true,
             severity: "success",
             message: "Ticket created successfully!",
@@ -51,7 +48,7 @@ export default function TicketForm({
           setOpenDrawer(false);
         })
         .catch((error) => {
-          setApiRequestStatusSnackbar({
+          setSnackbarStatus({
             open: true,
             severity: "error",
             message: error.response.data.error,

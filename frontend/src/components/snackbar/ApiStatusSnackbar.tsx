@@ -1,41 +1,39 @@
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { Dispatch, SetStateAction, SyntheticEvent } from "react";
-import { ApiResponseStatusSnackbar } from "../../types/Api.ts";
+import { SnackbarStatus } from "../../types/SnackbarStatus.ts";
 
 type ApiStatusSnackbarProps = {
-  apiRequestStatusSnackbar: ApiResponseStatusSnackbar;
-  setApiRequestStatusSnackbar: Dispatch<
-    SetStateAction<ApiResponseStatusSnackbar>
-  >;
+  snackbarStatus: SnackbarStatus;
+  setSnackbarStatus: Dispatch<SetStateAction<SnackbarStatus>>;
 };
 
 export default function ApiStatusSnackbar({
-  apiRequestStatusSnackbar,
-  setApiRequestStatusSnackbar,
+  snackbarStatus,
+  setSnackbarStatus,
 }: Readonly<ApiStatusSnackbarProps>) {
   const handleClose = (_event?: SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
 
-    setApiRequestStatusSnackbar({ ...apiRequestStatusSnackbar, open: false });
+    setSnackbarStatus({ ...snackbarStatus, open: false });
   };
 
   return (
     <div>
       <Snackbar
-        open={apiRequestStatusSnackbar.open}
+        open={snackbarStatus.open}
         autoHideDuration={6000}
         onClose={handleClose}
       >
         <Alert
           onClose={handleClose}
-          severity={apiRequestStatusSnackbar.severity}
+          severity={snackbarStatus.severity}
           variant="filled"
           sx={{ width: "100%" }}
         >
-          {apiRequestStatusSnackbar.message}
+          {snackbarStatus.message}
         </Alert>
       </Snackbar>
     </div>
