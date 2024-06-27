@@ -2,12 +2,12 @@ import { Stack } from "@mui/material";
 import TicketStatusChip from "../chip/TicketStatusChip.tsx";
 import { Dispatch, SetStateAction, useState } from "react";
 import { User } from "../../types/User.ts";
-import axios from "axios";
 import { ApiResponseStatusSnackbar } from "../../types/Api.ts";
 import CancelButton from "../buttons/CancelButton.tsx";
 import SaveButton from "../buttons/SaveButton.tsx";
 import TicketTitleInput from "../inputs/TicketTitleInput.tsx";
 import TicketDescriptionInput from "../inputs/TicketDescriptionInput.tsx";
+import ApiUtils from "../utils/ApiRequests.tsx";
 
 type NewTicketFormProps = {
   user: User | null | undefined;
@@ -39,8 +39,7 @@ export default function NewTicketForm({
     setDescriptionError(isDescriptionError);
 
     if (!isTitleError && !isDescriptionError) {
-      axios
-        .post("/api/ticket", { title: title, description: description })
+      ApiUtils.createNewTicket({ title: title, description: description })
         .then(() => {
           setApiRequestStatusSnackbar({
             open: true,
