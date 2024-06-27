@@ -20,7 +20,7 @@ export default function RichTextEditor({
 }: Readonly<RichTextEditorProps>) {
   const extensions = [
     StarterKit,
-    Image,
+    Image.configure({ inline: true }),
     Placeholder.configure({
       placeholder: ({ node }) => {
         if (node.type.name === "heading") {
