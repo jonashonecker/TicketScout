@@ -2,13 +2,13 @@ import MainNavBar from "../navbars/MainNavBar.tsx";
 import { User } from "../../types/User.ts";
 import { Ticket } from "../../types/Ticket.ts";
 import { Dispatch, SetStateAction, useState } from "react";
-import TicketCard from "../card/TicketCard.tsx";
-import { Box, Container, Grid, Grow } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import SearchForm from "../forms/SearchForm.tsx";
-import NewTicketForm from "../forms/NewTicketForm.tsx";
+import TicketForm from "../forms/TicketForm.tsx";
 import ApiStatusSnackbar from "../snackbar/ApiStatusSnackbar.tsx";
 import { ApiResponseStatusSnackbar } from "../../types/Api.ts";
 import Sidepanel from "../sidepanel/Sidepanel.tsx";
+import TicketCardsGrid from "../layout/TicketCardsGrid.tsx";
 
 type MainPageProps = {
   user: User | null | undefined;
@@ -32,28 +32,15 @@ export default function MainPage({
   return (
     <>
       <MainNavBar user={user} setOpenDrawer={setOpenDrawer} />
-      <Container maxWidth="xl" sx={{ p: 3 }}>
+      <Container fixed sx={{ p: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <SearchForm setSearchResults={setSearchResults} />
         </Box>
-        <Grid
-          container
-          spacing={{ xs: 2, md: 3 }}
-          columns={{ xs: 1, sm: 8, md: 12, lg: 12 }}
-          alignItems="stretch"
-        >
-          {searchResults?.map((ticket, index) => (
-            <Grow in={true} timeout={500 + index * 100} key={ticket.id}>
-              <Grid item xs={1} sm={4} md={4} lg={3}>
-                <TicketCard ticket={ticket} />
-              </Grid>
-            </Grow>
-          ))}
-        </Grid>
+        <TicketCardsGrid searchResults={searchResults} />
       </Container>
       <Sidepanel openDrawer={openDrawer} setOpenDrawer={setOpenDrawer}>
         <Container sx={{ p: 3 }}>
-          <NewTicketForm
+          <TicketForm
             user={user}
             setOpenDrawer={setOpenDrawer}
             apiRequestStatusSnackbar={apiRequestStatusSnackbar}

@@ -10,7 +10,7 @@ import TicketDescriptionInput from "../inputs/TicketDescriptionInput.tsx";
 import ApiUtils from "../utils/ApiRequests.tsx";
 import Validation from "../utils/Validation.tsx";
 
-type NewTicketFormProps = {
+type TicketFormProps = {
   user: User | null | undefined;
   setOpenDrawer: Dispatch<SetStateAction<boolean>>;
   apiRequestStatusSnackbar: ApiResponseStatusSnackbar;
@@ -19,11 +19,11 @@ type NewTicketFormProps = {
   >;
 };
 
-export default function NewTicketForm({
+export default function TicketForm({
   user,
   setOpenDrawer,
   setApiRequestStatusSnackbar,
-}: Readonly<NewTicketFormProps>) {
+}: Readonly<TicketFormProps>) {
   const [title, setTitle] = useState<string>("");
   const [titleError, setTitleError] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
