@@ -10,6 +10,7 @@ import TicketDescriptionInput from "../inputs/TicketDescriptionInput.tsx";
 import ApiUtils from "../utils/ApiRequests.tsx";
 import Validation from "../utils/Validation.tsx";
 import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import UpdateButton from "../buttons/UpdateButton.tsx";
 
 type TicketFormProps = {
   user: User | null | undefined;
@@ -83,6 +84,9 @@ export default function TicketForm({
       <Stack direction="row" justifyContent={"end"} spacing={1} sx={{ mt: 2 }}>
         <CancelButton onClick={cancel} />
         {sidePanelStatus.newTicket && <SaveButton onClick={save} />}
+        {sidePanelStatus.updateTicket && (
+          <UpdateButton onClick={() => console.log("update")} />
+        )}
       </Stack>
     </>
   );
