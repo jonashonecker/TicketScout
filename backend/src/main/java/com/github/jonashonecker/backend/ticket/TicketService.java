@@ -45,14 +45,13 @@ public class TicketService {
 
     public Ticket updateTicket(UpdateTicket updateTicket) {
         Ticket existingTicket = getTicketById(updateTicket.id());
-        existingTicket = new Ticket(
+        return ticketRepository.save(new Ticket(
                 existingTicket.id(),
                 existingTicket.projectName(),
                 updateTicket.title(),
                 updateTicket.description(),
                 existingTicket.status(),
                 existingTicket.author()
-        );
-        return ticketRepository.save(existingTicket);
+        ));
     }
 }
