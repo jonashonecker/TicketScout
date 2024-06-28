@@ -1,5 +1,6 @@
 package com.github.jonashonecker.backend.ticket;
 
+import com.github.jonashonecker.backend.ticket.domain.NewTicket;
 import com.github.jonashonecker.backend.ticket.domain.Status;
 import com.github.jonashonecker.backend.ticket.domain.Ticket;
 import com.github.jonashonecker.backend.user.UserService;
@@ -59,13 +60,9 @@ class TicketServiceTest {
         String defaultProject = "Default Project";
         Status defaultStatus = Status.OPEN;
         TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
-        Ticket ticket = new Ticket(
-                "1",
-                "test-projectName",
+        NewTicket newTicket = new NewTicket(
                 "test-title",
-                "test-description",
-                Status.IN_PROGRESS,
-                ticketScoutUser
+                "test-description"
         );
 
         Ticket expected = new Ticket(
@@ -82,7 +79,7 @@ class TicketServiceTest {
         when(ticketRepository.insert(any(Ticket.class))).thenReturn(expected);
 
         //WHEN
-        Ticket actual = ticketService.createTicket(ticket);
+        Ticket actual = ticketService.createTicket(newTicket);
 
         //THEN
         verify(ticketRepository, times(1)).insert(expected);

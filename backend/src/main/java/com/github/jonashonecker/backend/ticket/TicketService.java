@@ -1,7 +1,9 @@
 package com.github.jonashonecker.backend.ticket;
 
+import com.github.jonashonecker.backend.ticket.domain.NewTicket;
 import com.github.jonashonecker.backend.ticket.domain.Status;
 import com.github.jonashonecker.backend.ticket.domain.Ticket;
+import com.github.jonashonecker.backend.ticket.domain.UpdateTicket;
 import com.github.jonashonecker.backend.user.UserService;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +25,33 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
-    public Ticket createTicket(Ticket ticket) {
+    public Ticket getTicketById(String id) {
+        return ticketRepository.findById(id).orElseThrow();
+    }
+
+    public Ticket createTicket(NewTicket newTicket) {
         String defaultProjectName = "Default Project";
         Status defaultStatus = Status.OPEN;
-        Ticket newTicket = new Ticket(idService.getUUID(),
+        return ticketRepository.insert(new Ticket(
+                idService.getUUID(),
                 defaultProjectName,
-                ticket.title(),
-                ticket.description(),
+                newTicket.title(),
+                newTicket.description(),
                 defaultStatus,
                 userService.getCurrentUser()
+        ));
+    }
+
+    public Ticket updateTicket(UpdateTicket updateTicket) {
+        Ticket existingTicket = getTicketById(updateTicket.id());
+        existingTicket = new Ticket(
+                existingTicket.id(),
+                existingTicket.projectName(),
+                updateTicket.title(),
+                updateTicket.description(),
+                existingTicket.status(),
+                existingTicket.author()
         );
-        return ticketRepository.insert(newTicket);
+        return ticketRepository.save(existingTicket);
     }
 }
