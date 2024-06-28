@@ -3,11 +3,14 @@ package com.github.jonashonecker.backend.ticket;
 import com.github.jonashonecker.backend.ticket.domain.NewTicket;
 import com.github.jonashonecker.backend.ticket.domain.Status;
 import com.github.jonashonecker.backend.ticket.domain.Ticket;
+import com.github.jonashonecker.backend.ticket.domain.UpdateTicket;
+import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -30,6 +33,41 @@ class TicketServiceTest {
 
         //THEN
         assertEquals(List.of(), actual);
+    }
+
+    @Test
+    void getTicketById_whenTicketNotInRepository_throwNoSuchTicketException() {
+        //GIVEN
+        String id = "test-id";
+        when(ticketRepository.findById(id)).thenReturn(Optional.empty());
+
+        //WHEN
+        NoSuchTicketException actual = assertThrows(NoSuchTicketException.class, () -> ticketService.getTicketById(id));
+
+        //THEN
+        assertEquals("Could not find ticket with id: " + id, actual.getMessage());
+    }
+
+    @Test
+    void getTicketById_whenTicketInRepository_returnTicket() {
+        //GIVEN
+        String id = "test-id";
+        Ticket expected = new Ticket(
+                id,
+                "test-projectName",
+                "test-title",
+                "test-description",
+                Status.OPEN,
+                new TicketScoutUser("test-name", "test-avatarUrl")
+        );
+
+        when(ticketRepository.findById(id)).thenReturn(Optional.of(expected));
+
+        //WHEN
+        Ticket actual = ticketService.getTicketById(id);
+
+        //THEN
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -85,6 +123,40 @@ class TicketServiceTest {
         verify(ticketRepository, times(1)).insert(expected);
         verify(idService, times(1)).getUUID();
         verify(userService, times(1)).getCurrentUser();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void updateTicket_whenUpdateTicketTitle_returnTicketWithUpdatedTitle() {
+        //GIVEN
+        String id = "test-id";
+        String description = "test-description";
+        UpdateTicket updateTicket = new UpdateTicket(id, "new-updated-title", description);
+        Ticket ticketInDb = new Ticket(
+                id,
+                "test-projectName",
+                "test-title",
+                description,
+                Status.OPEN,
+                new TicketScoutUser("test-name", "test-avatarUrl")
+        );
+        Ticket expected = new Ticket(
+                id,
+                ticketInDb.projectName(),
+                "new-updated-title",
+                ticketInDb.description(),
+                ticketInDb.status(),
+                ticketInDb.author()
+        );
+        when(ticketRepository.findById(id)).thenReturn(Optional.of(ticketInDb));
+        when(ticketRepository.save(expected)).thenReturn(expected);
+
+        //WHEN
+        Ticket actual = ticketService.updateTicket(updateTicket);
+
+        //THEN
+        verify(ticketRepository, times(1)).save(expected);
+        verify(ticketRepository, times(1)).findById(id);
         assertEquals(expected, actual);
     }
 }

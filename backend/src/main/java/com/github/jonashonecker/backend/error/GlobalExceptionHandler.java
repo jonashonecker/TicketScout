@@ -1,6 +1,7 @@
 package com.github.jonashonecker.backend.error;
 
 import com.github.jonashonecker.backend.error.domain.ApiErrorResponse;
+import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.exception.UserAuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -34,5 +35,12 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(NoSuchTicketException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiErrorResponse handleNoSuchTicketException(NoSuchTicketException ex) {
 
+        return new ApiErrorResponse(
+                ex.getMessage()
+        );
+    }
 }

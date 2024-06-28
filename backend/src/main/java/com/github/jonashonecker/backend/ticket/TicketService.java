@@ -4,6 +4,7 @@ import com.github.jonashonecker.backend.ticket.domain.NewTicket;
 import com.github.jonashonecker.backend.ticket.domain.Status;
 import com.github.jonashonecker.backend.ticket.domain.Ticket;
 import com.github.jonashonecker.backend.ticket.domain.UpdateTicket;
+import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class TicketService {
     }
 
     public Ticket getTicketById(String id) {
-        return ticketRepository.findById(id).orElseThrow();
+        return ticketRepository.findById(id).orElseThrow(() -> new NoSuchTicketException("Could not find ticket with id: " + id));
     }
 
     public Ticket createTicket(NewTicket newTicket) {

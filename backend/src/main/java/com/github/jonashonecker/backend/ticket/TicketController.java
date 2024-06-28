@@ -28,7 +28,7 @@ public class TicketController {
     }
 
     @PutMapping
-    public Ticket updateTicket(@RequestBody UpdateTicket updateTicket) {
+    public Ticket updateTicket(@Valid @RequestBody UpdateTicket updateTicket) {
         return ticketService.updateTicket(updateTicket);
     }
 }
