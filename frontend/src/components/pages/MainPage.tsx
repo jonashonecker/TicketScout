@@ -54,6 +54,8 @@ export default function MainPage({
             sidePanelStatus={sidepanelStatus}
             setSidepanelStatus={setSidepanelStatus}
             setSnackbarStatus={setSnackbarStatus}
+            searchResults={searchResults}
+            setSearchResults={setSearchResults}
           />
         </Container>
       </Sidepanel>

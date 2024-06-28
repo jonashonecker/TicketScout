@@ -11,12 +11,15 @@ import ApiUtils from "../utils/ApiRequests.tsx";
 import Validation from "../utils/Validation.tsx";
 import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
 import UpdateButton from "../buttons/UpdateButton.tsx";
+import { Ticket } from "../../types/Ticket.ts";
 
 type TicketFormProps = {
   user: User | null | undefined;
   sidePanelStatus: SidepanelStatus;
   setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
   setSnackbarStatus: Dispatch<SetStateAction<SnackbarStatus>>;
+  searchResults: Ticket[] | undefined;
+  setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
 };
 
 export default function TicketForm({
@@ -24,6 +27,8 @@ export default function TicketForm({
   sidePanelStatus,
   setSidepanelStatus,
   setSnackbarStatus,
+  searchResults,
+  setSearchResults,
 }: Readonly<TicketFormProps>) {
   const [title, setTitle] = useState<string>("");
   const [titleError, setTitleError] = useState<boolean>(false);
@@ -79,7 +84,16 @@ export default function TicketForm({
         title: title,
         description: description,
       })
-        .then(() => {
+        .then((response) => {
+          setSearchResults(
+            searchResults?.map((ticket) => {
+              if (ticket.id === response.data.id) {
+                return response.data;
+              } else {
+                return ticket;
+              }
+            }),
+          );
           setSnackbarStatus({
             open: true,
             severity: "success",
