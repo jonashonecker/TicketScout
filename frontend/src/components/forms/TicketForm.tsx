@@ -66,6 +66,7 @@ export default function TicketForm({
       <TicketTitleInput
         titleError={titleError}
         setTitle={setTitle}
+        title={title}
         sidePanelStatus={sidePanelStatus}
       />
       <Stack direction="row" sx={{ mt: 2, mb: 1 }}>
