@@ -24,8 +24,7 @@ export default function MainPage({
 }: Readonly<MainPageProps>) {
   const [sidepanelStatus, setSidepanelStatus] = useState<SidepanelStatus>({
     open: false,
-    updateTicket: false,
-    newTicket: false,
+    formType: "NewTicket",
   });
   const [snackbarStatus, setSnackbarStatus] = useState<SnackbarStatus>({
     open: false,

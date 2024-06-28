@@ -75,7 +75,7 @@ export default function TicketForm({
       <TicketDescriptionInput
         user={user}
         description={
-          sidePanelStatus.ticket
+          sidePanelStatus.formType == "UpdateTicket"
             ? sidePanelStatus.ticket.description
             : description
         }
@@ -84,8 +84,10 @@ export default function TicketForm({
       />
       <Stack direction="row" justifyContent={"end"} spacing={1} sx={{ mt: 2 }}>
         <CancelButton onClick={cancel} />
-        {sidePanelStatus.newTicket && <SaveButton onClick={save} />}
-        {sidePanelStatus.updateTicket && (
+        {sidePanelStatus.formType == "NewTicket" && (
+          <SaveButton onClick={save} />
+        )}
+        {sidePanelStatus.formType == "UpdateTicket" && (
           <UpdateButton onClick={() => console.log("update")} />
         )}
       </Stack>

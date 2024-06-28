@@ -16,8 +16,12 @@ export default function TicketTitleInput({
   sidePanelStatus,
 }: TicketTitleInputProps) {
   useEffect(() => {
-    setTitle(sidePanelStatus.ticket ? sidePanelStatus.ticket.title : "");
-  }, [sidePanelStatus.ticket, setTitle]);
+    setTitle(
+      sidePanelStatus.formType == "UpdateTicket"
+        ? sidePanelStatus.ticket.title
+        : "",
+    );
+  }, [sidePanelStatus]);
   return (
     <TextField
       fullWidth

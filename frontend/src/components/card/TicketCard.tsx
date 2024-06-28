@@ -26,8 +26,7 @@ export default function TicketCard({
         onClick={() =>
           setSidepanelStatus({
             open: true,
-            newTicket: false,
-            updateTicket: true,
+            formType: "UpdateTicket",
             ticket: ticket,
           })
         }

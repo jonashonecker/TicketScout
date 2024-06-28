@@ -33,8 +33,7 @@ export default function MainMenuButton({
   function openNewTicketForm() {
     setSidepanelStatus({
       open: true,
-      newTicket: true,
-      updateTicket: false,
+      formType: "NewTicket",
     });
     setAnchorEl(null);
   }
