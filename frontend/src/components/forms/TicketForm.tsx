@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import TicketStatusChip from "../chip/TicketStatusChip.tsx";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../types/User.ts";
 import { SnackbarStatus } from "../../types/SnackbarStatus.ts";
 import CancelButton from "../buttons/CancelButton.tsx";
@@ -30,16 +30,22 @@ export default function TicketForm({
   const [description, setDescription] = useState<string>("");
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (sidePanelStatus.formType == "UpdateTicket") {
+      setTitle(sidePanelStatus.ticket.title);
+      setDescription(sidePanelStatus.ticket.description);
+    } else {
+      setTitle("");
+      setDescription("");
+    }
+  }, [sidePanelStatus]);
+
   function cancel() {
     setSidepanelStatus({ ...sidePanelStatus, open: false });
   }
 
   function save() {
-    const isTitleError = !title.trim();
-    const isDescriptionError = !Validation.checkIfHtmlContainsText(description);
-
-    setTitleError(isTitleError);
-    setDescriptionError(isDescriptionError);
+    const [isTitleError, isDescriptionError] = validateTitleAndDescription();
 
     if (!isTitleError && !isDescriptionError) {
       ApiUtils.createNewTicket({ title: title, description: description })
@@ -61,24 +67,59 @@ export default function TicketForm({
     }
   }
 
+  function update() {
+    const [isTitleError, isDescriptionError] = validateTitleAndDescription();
+
+    if (!isTitleError && !isDescriptionError) {
+      ApiUtils.updateTicket({
+        id:
+          sidePanelStatus.formType == "UpdateTicket"
+            ? sidePanelStatus.ticket.id
+            : "",
+        title: title,
+        description: description,
+      })
+        .then(() => {
+          setSnackbarStatus({
+            open: true,
+            severity: "success",
+            message: "Ticket updated successfully!",
+          });
+          setSidepanelStatus({ ...sidePanelStatus, open: false });
+        })
+        .catch((error) => {
+          setSnackbarStatus({
+            open: true,
+            severity: "error",
+            message: error.response.data.error,
+          });
+        });
+    }
+  }
+
+  function validateTitleAndDescription() {
+    const isTitleError = !title.trim();
+    const isDescriptionError = !Validation.checkIfHtmlContainsText(description);
+
+    setTitleError(isTitleError);
+    setDescriptionError(isDescriptionError);
+
+    return [isTitleError, isDescriptionError];
+  }
+
   return (
     <>
       <TicketTitleInput
         titleError={titleError}
         setTitle={setTitle}
         title={title}
-        sidePanelStatus={sidePanelStatus}
       />
       <Stack direction="row" sx={{ mt: 2, mb: 1 }}>
         <TicketStatusChip ticketStatus={"OPEN"} />
       </Stack>
       <TicketDescriptionInput
         user={user}
-        description={
-          sidePanelStatus.formType == "UpdateTicket"
-            ? sidePanelStatus.ticket.description
-            : description
-        }
+        description={description}
         setDescription={setDescription}
         descriptionError={descriptionError}
       />
@@ -88,7 +129,7 @@ export default function TicketForm({
           <SaveButton onClick={save} />
         )}
         {sidePanelStatus.formType == "UpdateTicket" && (
-          <UpdateButton onClick={() => console.log("update")} />
+          <UpdateButton onClick={update} />
         )}
       </Stack>
     </>

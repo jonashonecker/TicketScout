@@ -4,7 +4,7 @@ import Image from "@tiptap/extension-image";
 import "./styles.css";
 import MenuBar from "./menu/MenuBar.tsx";
 import { User } from "../../types/User.ts";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import Placeholder from "@tiptap/extension-placeholder";
 
 type RichTextEditorProps = {
@@ -18,6 +18,10 @@ export default function RichTextEditor({
   setDescription,
   description,
 }: Readonly<RichTextEditorProps>) {
+  useEffect(() => {
+    editor?.commands.setContent(description);
+  }, [description]);
+
   const extensions = [
     StarterKit,
     Image.configure({ inline: true }),

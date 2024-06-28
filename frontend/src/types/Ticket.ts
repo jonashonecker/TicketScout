@@ -10,3 +10,12 @@ export type Ticket = {
   status: TicketStatus;
   author: User;
 };
+
+export type NewTicket = {
+  title: string;
+  description: string;
+};
+
+export type UpdateTicket = NewTicket & {
+  id: string;
+};

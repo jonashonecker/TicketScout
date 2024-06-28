@@ -1,27 +1,17 @@
 import { TextField } from "@mui/material";
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import { Dispatch, SetStateAction } from "react";
 
 type TicketTitleInputProps = {
   titleError: boolean;
   setTitle: Dispatch<SetStateAction<string>>;
   title: string;
-  sidePanelStatus: SidepanelStatus;
 };
 
 export default function TicketTitleInput({
   titleError,
   setTitle,
   title,
-  sidePanelStatus,
 }: TicketTitleInputProps) {
-  useEffect(() => {
-    setTitle(
-      sidePanelStatus.formType == "UpdateTicket"
-        ? sidePanelStatus.ticket.title
-        : "",
-    );
-  }, [sidePanelStatus]);
   return (
     <TextField
       fullWidth
