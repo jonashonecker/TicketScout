@@ -12,7 +12,7 @@ type TicketCardsGridProps = {
 export default function TicketCardsGrid({
   searchResults,
   setSidepanelStatus,
-}: TicketCardsGridProps) {
+}: Readonly<TicketCardsGridProps>) {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.only("xs"));
   const isSm = useMediaQuery(theme.breakpoints.only("sm"));
@@ -40,7 +40,7 @@ export default function TicketCardsGrid({
     <Box display="flex" gap={{ xs: 2, md: 3 }}>
       {columns.map((column, colIndex) => (
         <Box
-          key={colIndex}
+          key={`column-${colIndex}`}
           display="flex"
           flexDirection="column"
           gap={{ xs: 2, md: 3 }}

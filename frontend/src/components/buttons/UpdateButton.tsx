@@ -4,7 +4,7 @@ type UpdateButtonProps = {
   onClick: () => void;
 };
 
-export default function UpdateButton({ onClick }: UpdateButtonProps) {
+export default function UpdateButton({ onClick }: Readonly<UpdateButtonProps>) {
   return (
     <Button
       onClick={onClick}

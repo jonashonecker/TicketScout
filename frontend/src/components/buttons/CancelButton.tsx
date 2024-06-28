@@ -4,7 +4,7 @@ type CancelButtonProps = {
   onClick: () => void;
 };
 
-export default function CancelButton({ onClick }: CancelButtonProps) {
+export default function CancelButton({ onClick }: Readonly<CancelButtonProps>) {
   return (
     <Button
       onClick={onClick}

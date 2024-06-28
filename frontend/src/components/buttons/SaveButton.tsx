@@ -4,7 +4,7 @@ type SaveButtonProps = {
   onClick: () => void;
 };
 
-export default function SaveButton({ onClick }: SaveButtonProps) {
+export default function SaveButton({ onClick }: Readonly<SaveButtonProps>) {
   return (
     <Button
       onClick={onClick}

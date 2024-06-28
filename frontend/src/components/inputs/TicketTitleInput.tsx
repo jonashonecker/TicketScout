@@ -11,7 +11,7 @@ export default function TicketTitleInput({
   titleError,
   setTitle,
   title,
-}: TicketTitleInputProps) {
+}: Readonly<TicketTitleInputProps>) {
   return (
     <TextField
       fullWidth

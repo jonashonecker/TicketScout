@@ -15,7 +15,7 @@ export default function TicketDescriptionInput({
   description,
   setDescription,
   descriptionError,
-}: TicketDescriptionInputProps) {
+}: Readonly<TicketDescriptionInputProps>) {
   return (
     <>
       <Box
