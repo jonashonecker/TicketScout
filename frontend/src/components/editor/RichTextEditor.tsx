@@ -9,18 +9,20 @@ import Placeholder from "@tiptap/extension-placeholder";
 
 type RichTextEditorProps = {
   user: User | null | undefined;
+  initialDescription: string;
   description: string;
   setDescription: Dispatch<SetStateAction<string>>;
 };
 
 export default function RichTextEditor({
   user,
+  initialDescription,
   setDescription,
   description,
 }: Readonly<RichTextEditorProps>) {
   useEffect(() => {
-    editor?.commands.setContent(description);
-  }, [description]);
+    editor?.commands.setContent(initialDescription);
+  }, [initialDescription]);
 
   const extensions = [
     StarterKit,

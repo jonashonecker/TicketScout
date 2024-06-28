@@ -7,11 +7,13 @@ type TicketDescriptionInputProps = {
   user: User | null | undefined;
   description: string;
   setDescription: Dispatch<SetStateAction<string>>;
+  initialDescription: string;
   descriptionError: boolean;
 };
 
 export default function TicketDescriptionInput({
   user,
+  initialDescription,
   description,
   setDescription,
   descriptionError,
@@ -28,6 +30,7 @@ export default function TicketDescriptionInput({
       >
         <RichTextEditor
           user={user}
+          initialDescription={initialDescription}
           description={description}
           setDescription={setDescription}
         />

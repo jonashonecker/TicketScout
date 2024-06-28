@@ -32,6 +32,7 @@ export default function TicketForm({
 }: Readonly<TicketFormProps>) {
   const [title, setTitle] = useState<string>("");
   const [titleError, setTitleError] = useState<boolean>(false);
+  const [initialDescription, setInitialDescription] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
 
@@ -39,9 +40,11 @@ export default function TicketForm({
     if (sidePanelStatus.formType == "UpdateTicket") {
       setTitle(sidePanelStatus.ticket.title);
       setDescription(sidePanelStatus.ticket.description);
+      setInitialDescription(sidePanelStatus.ticket.description);
     } else {
       setTitle("");
       setDescription("");
+      setInitialDescription("");
     }
   }, [sidePanelStatus]);
 
@@ -133,6 +136,7 @@ export default function TicketForm({
       </Stack>
       <TicketDescriptionInput
         user={user}
+        initialDescription={initialDescription}
         description={description}
         setDescription={setDescription}
         descriptionError={descriptionError}
