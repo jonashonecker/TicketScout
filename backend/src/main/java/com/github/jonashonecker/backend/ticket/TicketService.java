@@ -1,7 +1,10 @@
 package com.github.jonashonecker.backend.ticket;
 
+import com.github.jonashonecker.backend.ticket.domain.NewTicketDTO;
 import com.github.jonashonecker.backend.ticket.domain.Status;
 import com.github.jonashonecker.backend.ticket.domain.Ticket;
+import com.github.jonashonecker.backend.ticket.domain.UpdateTicketDTO;
+import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +26,32 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
-    public Ticket createTicket(Ticket ticket) {
+    public Ticket getTicketById(String id) {
+        return ticketRepository.findById(id).orElseThrow(() -> new NoSuchTicketException("Could not find ticket with id: " + id));
+    }
+
+    public Ticket createTicket(NewTicketDTO newTicketDTO) {
         String defaultProjectName = "Default Project";
         Status defaultStatus = Status.OPEN;
-        Ticket newTicket = new Ticket(idService.getUUID(),
+        return ticketRepository.insert(new Ticket(
+                idService.getUUID(),
                 defaultProjectName,
-                ticket.title(),
-                ticket.description(),
+                newTicketDTO.title(),
+                newTicketDTO.description(),
                 defaultStatus,
                 userService.getCurrentUser()
-        );
-        return ticketRepository.insert(newTicket);
+        ));
+    }
+
+    public Ticket updateTicket(UpdateTicketDTO updateTicketDTO) {
+        Ticket existingTicket = getTicketById(updateTicketDTO.id());
+        return ticketRepository.save(new Ticket(
+                existingTicket.id(),
+                existingTicket.projectName(),
+                updateTicketDTO.title(),
+                updateTicketDTO.description(),
+                existingTicket.status(),
+                existingTicket.author()
+        ));
     }
 }

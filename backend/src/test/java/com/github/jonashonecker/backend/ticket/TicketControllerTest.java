@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -230,4 +231,98 @@ class TicketControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.error").value("There is an issue with your user login. Please contact support."));
     }
+
+    @Test
+    void updateTicket_whenUnauthenticated_returnUnauthorized() throws Exception {
+        //GIVEN
+        //WHEN
+        mockMvc.perform(put("/api/ticket"))
+                //THEN
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("")
+                );
+    }
+
+    @Test
+    @DirtiesContext
+    @WithMockUser
+    void updateTicket_whenUpdateTitleAndDescription_returnTicketWithUpdatedTitleAndDescription() throws Exception {
+        //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
+        ticketRepository.insert(new Ticket(
+                "test-id",
+                "test-projectName",
+                "test-title",
+                "test-description",
+                Status.IN_PROGRESS,
+                ticketScoutUser
+        ));
+
+        //WHEN
+        mockMvc.perform(put("/api/ticket")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "id": "test-id",
+                                "title": "updated-title",
+                                "description": "updated-description"
+                                }
+                                """))
+                //THEN
+                .andExpect(status().isOk())
+                .andExpect(content().json("""
+                        {
+                        "id": "test-id",
+                        "projectName": "test-projectName",
+                        "title": "updated-title",
+                        "description": "updated-description",
+                        "status": "IN_PROGRESS",
+                        "author": {"name": "test-name", "avatarUrl": "test-avatarUrl"}
+                        }
+                        """));
+    }
+
+    @Test
+    @WithMockUser
+    void updateTicket_whenTicketNotInRepository_returnApiErrorMessage() throws Exception {
+        //GIVEN
+        //WHEN
+        mockMvc.perform(put("/api/ticket")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "id": "test-id",
+                                "title": "test-title",
+                                "description": "test-description"
+                                }
+                                """))
+                //THEN
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Could not find ticket with id: test-id"));
+    }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void updateTicket_whenInvalidIdAndTitleAndDescription_thenReturnApiErrorMessage() throws Exception {
+        //GIVEN
+        //WHEN
+        mockMvc.perform(put("/api/ticket")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "id": "",
+                                  "title": "",
+                                  "description": ""
+                                }
+                                """))
+                //THEN
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", containsString("Input validation failed for")))
+                .andExpect(jsonPath("$.error", containsString("and")))
+                .andExpect(jsonPath("$.error", containsString("description (Description must not be empty)")))
+                .andExpect(jsonPath("$.error", containsString("id (Id must not be empty)")))
+                .andExpect(jsonPath("$.error", containsString("title (Title must not be empty)")));
+    }
+
 }

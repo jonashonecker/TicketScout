@@ -5,10 +5,11 @@ import UserMenuButton from "../buttons/UserMenuButton.tsx";
 import MainMenuButton from "../buttons/MainMenuButton.tsx";
 import { User } from "../../types/User.ts";
 import { Dispatch, SetStateAction } from "react";
+import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
 
 type NavBarProps = {
   user: User | null | undefined;
-  setOpenDrawer: Dispatch<SetStateAction<boolean>>;
+  setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
 };
 
 const StyledAppBar = styled(AppBar)({
@@ -17,12 +18,12 @@ const StyledAppBar = styled(AppBar)({
 
 export default function MainNavBar({
   user,
-  setOpenDrawer,
+  setSidepanelStatus,
 }: Readonly<NavBarProps>) {
   return (
     <StyledAppBar position={"sticky"}>
       <Toolbar>
-        {user && <MainMenuButton setOpenDrawer={setOpenDrawer} />}
+        {user && <MainMenuButton setSidepanelStatus={setSidepanelStatus} />}
         <Box sx={{ flexGrow: 1 }}>
           <Logo />
         </Box>

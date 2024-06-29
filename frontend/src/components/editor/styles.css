@@ -1,8 +1,8 @@
 :root {
   --black: #2e2b29;
   --white: #ffffff;
-  --purple: #6a00f5;
-  --purple-light: #6a00f5;
+  --blue: #1976d2;
+  --blue-light: #e3f2fd;
   --gray-3: #e7e4e2;
   --gray-2: #f7f6f5;
   --gray-4: #c2bdba;
@@ -72,7 +72,7 @@
 
 /* Code and preformatted text styles */
 .tiptap code {
-  background-color: var(--purple-light);
+  background-color: var(--blue-light);
   border-radius: 0.4rem;
   color: var(--black);
   font-size: 0.85rem;
@@ -115,7 +115,7 @@
   max-width: 100%;
 }
 .tiptap img.ProseMirror-selectednode {
-  outline: 3px solid var(--purple);
+  outline: 3px solid var(--blue);
 }
 
 /*Placeholder*/

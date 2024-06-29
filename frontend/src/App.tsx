@@ -2,11 +2,11 @@ import LoginPage from "./components/pages/LoginPage.tsx";
 import { Route, Routes } from "react-router-dom";
 import MainPage from "./components/pages/MainPage.tsx";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import ProtectedRoute from "./components/utils/ProtectedRoute.tsx";
 import { User } from "./types/User.ts";
 import Theme from "./components/theme/Theme.tsx";
 import { Ticket } from "./types/Ticket.ts";
+import ApiUtils from "./components/utils/ApiRequests.tsx";
 
 export default function App() {
   const [user, setUser] = useState<User | null | undefined>(undefined);
@@ -15,8 +15,7 @@ export default function App() {
   );
 
   const loadUser = () => {
-    axios
-      .get("/api/auth/me")
+    ApiUtils.getUser()
       .then((response) => {
         setUser(response.data);
       })
