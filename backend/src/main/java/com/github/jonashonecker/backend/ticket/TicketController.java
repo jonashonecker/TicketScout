@@ -1,8 +1,8 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.NewTicket;
+import com.github.jonashonecker.backend.ticket.domain.NewTicketDTO;
 import com.github.jonashonecker.backend.ticket.domain.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.UpdateTicket;
+import com.github.jonashonecker.backend.ticket.domain.UpdateTicketDTO;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +23,12 @@ public class TicketController {
     }
 
     @PostMapping
-    public Ticket createTicket(@Valid @RequestBody NewTicket newTicket) {
-        return ticketService.createTicket(newTicket);
+    public Ticket createTicket(@Valid @RequestBody NewTicketDTO newTicketDTO) {
+        return ticketService.createTicket(newTicketDTO);
     }
 
     @PutMapping
-    public Ticket updateTicket(@Valid @RequestBody UpdateTicket updateTicket) {
-        return ticketService.updateTicket(updateTicket);
+    public Ticket updateTicket(@Valid @RequestBody UpdateTicketDTO updateTicketDTO) {
+        return ticketService.updateTicket(updateTicketDTO);
     }
 }

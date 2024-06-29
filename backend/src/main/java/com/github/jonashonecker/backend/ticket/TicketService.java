@@ -1,9 +1,9 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.NewTicket;
+import com.github.jonashonecker.backend.ticket.domain.NewTicketDTO;
 import com.github.jonashonecker.backend.ticket.domain.Status;
 import com.github.jonashonecker.backend.ticket.domain.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.UpdateTicket;
+import com.github.jonashonecker.backend.ticket.domain.UpdateTicketDTO;
 import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import org.springframework.stereotype.Service;
@@ -30,26 +30,26 @@ public class TicketService {
         return ticketRepository.findById(id).orElseThrow(() -> new NoSuchTicketException("Could not find ticket with id: " + id));
     }
 
-    public Ticket createTicket(NewTicket newTicket) {
+    public Ticket createTicket(NewTicketDTO newTicketDTO) {
         String defaultProjectName = "Default Project";
         Status defaultStatus = Status.OPEN;
         return ticketRepository.insert(new Ticket(
                 idService.getUUID(),
                 defaultProjectName,
-                newTicket.title(),
-                newTicket.description(),
+                newTicketDTO.title(),
+                newTicketDTO.description(),
                 defaultStatus,
                 userService.getCurrentUser()
         ));
     }
 
-    public Ticket updateTicket(UpdateTicket updateTicket) {
-        Ticket existingTicket = getTicketById(updateTicket.id());
+    public Ticket updateTicket(UpdateTicketDTO updateTicketDTO) {
+        Ticket existingTicket = getTicketById(updateTicketDTO.id());
         return ticketRepository.save(new Ticket(
                 existingTicket.id(),
                 existingTicket.projectName(),
-                updateTicket.title(),
-                updateTicket.description(),
+                updateTicketDTO.title(),
+                updateTicketDTO.description(),
                 existingTicket.status(),
                 existingTicket.author()
         ));

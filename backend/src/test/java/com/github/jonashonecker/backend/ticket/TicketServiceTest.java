@@ -1,9 +1,9 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.NewTicket;
+import com.github.jonashonecker.backend.ticket.domain.NewTicketDTO;
 import com.github.jonashonecker.backend.ticket.domain.Status;
 import com.github.jonashonecker.backend.ticket.domain.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.UpdateTicket;
+import com.github.jonashonecker.backend.ticket.domain.UpdateTicketDTO;
 import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
@@ -98,7 +98,7 @@ class TicketServiceTest {
         String defaultProject = "Default Project";
         Status defaultStatus = Status.OPEN;
         TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
-        NewTicket newTicket = new NewTicket(
+        NewTicketDTO newTicketDTO = new NewTicketDTO(
                 "test-title",
                 "test-description"
         );
@@ -117,7 +117,7 @@ class TicketServiceTest {
         when(ticketRepository.insert(any(Ticket.class))).thenReturn(expected);
 
         //WHEN
-        Ticket actual = ticketService.createTicket(newTicket);
+        Ticket actual = ticketService.createTicket(newTicketDTO);
 
         //THEN
         verify(ticketRepository, times(1)).insert(expected);
@@ -131,7 +131,7 @@ class TicketServiceTest {
         //GIVEN
         String id = "test-id";
         String description = "test-description";
-        UpdateTicket updateTicket = new UpdateTicket(id, "new-updated-title", description);
+        UpdateTicketDTO updateTicketDTO = new UpdateTicketDTO(id, "new-updated-title", description);
         Ticket ticketInDb = new Ticket(
                 id,
                 "test-projectName",
@@ -152,7 +152,7 @@ class TicketServiceTest {
         when(ticketRepository.save(expected)).thenReturn(expected);
 
         //WHEN
-        Ticket actual = ticketService.updateTicket(updateTicket);
+        Ticket actual = ticketService.updateTicket(updateTicketDTO);
 
         //THEN
         verify(ticketRepository, times(1)).save(expected);
