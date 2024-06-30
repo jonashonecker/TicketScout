@@ -2,7 +2,7 @@ import { Box, Stack } from "@mui/material";
 import TicketStatusChip from "../chip/TicketStatusChip.tsx";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../types/User.ts";
-import { Config } from "../../types/Config.ts";
+import { SnackbarConfig } from "../../types/Config.ts";
 import CancelButton from "../buttons/CancelButton.tsx";
 import SaveButton from "../buttons/SaveButton.tsx";
 import TicketTitleInput from "../inputs/TicketTitleInput.tsx";
@@ -18,7 +18,7 @@ type TicketFormProps = {
   user: User | null | undefined;
   sidePanelConfig: SidepanelConfig;
   setSidepanelConfig: Dispatch<SetStateAction<SidepanelConfig>>;
-  setSnackbarConfig: Dispatch<SetStateAction<Config>>;
+  setSnackbarConfig: Dispatch<SetStateAction<SnackbarConfig>>;
   searchResults: Ticket[] | undefined;
   setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
   setConfirmDeletion: Dispatch<SetStateAction<boolean>>;

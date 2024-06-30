@@ -8,7 +8,7 @@ import {
 import CancelButton from "../buttons/CancelButton.tsx";
 import { Dispatch, SetStateAction } from "react";
 import DeleteButton from "../buttons/DeleteButton.tsx";
-import { Config, SidepanelConfig } from "../../types/Config.ts";
+import { SnackbarConfig, SidepanelConfig } from "../../types/Config.ts";
 import { deleteTicket } from "../utils/ApiRequests.tsx";
 import { Ticket } from "../../types/Ticket.ts";
 
@@ -19,7 +19,7 @@ type ConfirmDeletionDialogueProps = {
   setSidepanelConfig: Dispatch<SetStateAction<SidepanelConfig>>;
   searchResults: Ticket[] | undefined;
   setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
-  setSnackbarConfig: Dispatch<SetStateAction<Config>>;
+  setSnackbarConfig: Dispatch<SetStateAction<SnackbarConfig>>;
 };
 
 export default function ConfirmDeletionDialogue({

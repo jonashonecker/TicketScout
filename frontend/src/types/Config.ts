@@ -13,7 +13,7 @@ type UpdateTicketConfig = {
 
 export type SidepanelConfig = NewTicketConfig | UpdateTicketConfig;
 
-export type Config = {
+export type SnackbarConfig = {
   open: boolean;
   severity: "success" | "error";
   message: string;
