@@ -21,3 +21,7 @@ export function updateTicket(
 ): Promise<AxiosResponse<Ticket>> {
   return axios.put("/api/ticket", data);
 }
+
+export function deleteTicket(id: string) {
+  return axios.delete("api/ticket/" + id);
+}

@@ -9,7 +9,7 @@ import { SidepanelConfig } from "../../types/Config.ts";
 
 type NavBarProps = {
   user: User | null | undefined;
-  setSidepanelStatus: Dispatch<SetStateAction<SidepanelConfig>>;
+  setSidepanelConfig: Dispatch<SetStateAction<SidepanelConfig>>;
 };
 
 const StyledAppBar = styled(AppBar)({
@@ -18,12 +18,12 @@ const StyledAppBar = styled(AppBar)({
 
 export default function MainNavBar({
   user,
-  setSidepanelStatus,
+  setSidepanelConfig,
 }: Readonly<NavBarProps>) {
   return (
     <StyledAppBar position={"sticky"}>
       <Toolbar>
-        {user && <MainMenuButton setSidepanelStatus={setSidepanelStatus} />}
+        {user && <MainMenuButton setSidepanelConfig={setSidepanelConfig} />}
         <Box sx={{ flexGrow: 1 }}>
           <Logo />
         </Box>

@@ -3,14 +3,14 @@ import { Dispatch, ReactNode, SetStateAction } from "react";
 import { SidepanelConfig } from "../../types/Config.ts";
 
 type SidepanelProps = {
-  sidepanelStatus: SidepanelConfig;
-  setSidepanelStatus: Dispatch<SetStateAction<SidepanelConfig>>;
+  sidepanelConfig: SidepanelConfig;
+  setSidepanelConfig: Dispatch<SetStateAction<SidepanelConfig>>;
   children: ReactNode;
 };
 
 export default function Sidepanel({
-  sidepanelStatus,
-  setSidepanelStatus,
+  sidepanelConfig,
+  setSidepanelConfig,
   children,
 }: Readonly<SidepanelProps>) {
   const theme = useTheme();
@@ -27,9 +27,9 @@ export default function Sidepanel({
   return (
     <Drawer
       anchor={isVerySmallScreen ? "bottom" : "right"}
-      open={sidepanelStatus.open}
+      open={sidepanelConfig.open}
       onClose={() => {
-        setSidepanelStatus({ ...sidepanelStatus, open: false });
+        setSidepanelConfig({ ...sidepanelConfig, open: false });
       }}
       PaperProps={{
         sx: {

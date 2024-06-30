@@ -14,11 +14,11 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { SidepanelConfig } from "../../types/Config.ts";
 
 type MainMenuButtonProps = {
-  setSidepanelStatus: Dispatch<SetStateAction<SidepanelConfig>>;
+  setSidepanelConfig: Dispatch<SetStateAction<SidepanelConfig>>;
 };
 
 export default function MainMenuButton({
-  setSidepanelStatus,
+  setSidepanelConfig,
 }: Readonly<MainMenuButtonProps>) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -31,7 +31,7 @@ export default function MainMenuButton({
   };
 
   function openNewTicketForm() {
-    setSidepanelStatus({
+    setSidepanelConfig({
       open: true,
       formType: "NewTicket",
     });

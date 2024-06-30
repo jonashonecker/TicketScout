@@ -13,18 +13,18 @@ import { SidepanelConfig } from "../../types/Config.ts";
 
 type TicketCardProps = {
   ticket: Ticket;
-  setSidepanelStatus: Dispatch<SetStateAction<SidepanelConfig>>;
+  setSidepanelConfig: Dispatch<SetStateAction<SidepanelConfig>>;
 };
 
 export default function TicketCard({
   ticket,
-  setSidepanelStatus,
+  setSidepanelConfig,
 }: Readonly<TicketCardProps>) {
   return (
     <Card variant={"elevation"} sx={{ height: "100%" }}>
       <CardActionArea
         onClick={() =>
-          setSidepanelStatus({
+          setSidepanelConfig({
             open: true,
             formType: "UpdateTicket",
             ticket: ticket,

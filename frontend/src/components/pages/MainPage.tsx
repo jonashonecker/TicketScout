@@ -36,26 +36,26 @@ export default function MainPage({
 
   return (
     <>
-      <MainNavBar user={user} setSidepanelStatus={setSidepanelConfig} />
+      <MainNavBar user={user} setSidepanelConfig={setSidepanelConfig} />
       <Container fixed sx={{ p: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <SearchForm setSearchResults={setSearchResults} />
         </Box>
         <TicketCardsGrid
           searchResults={searchResults}
-          setSidepanelStatus={setSidepanelConfig}
+          setSidepanelConfig={setSidepanelConfig}
         />
       </Container>
       <Sidepanel
-        sidepanelStatus={sidepanelConfig}
-        setSidepanelStatus={setSidepanelConfig}
+        sidepanelConfig={sidepanelConfig}
+        setSidepanelConfig={setSidepanelConfig}
       >
         <Container sx={{ p: 3 }}>
           <TicketForm
             user={user}
-            sidePanelStatus={sidepanelConfig}
-            setSidepanelStatus={setSidepanelConfig}
-            setSnackbarStatus={setSnackbarConfig}
+            sidePanelConfig={sidepanelConfig}
+            setSidepanelConfig={setSidepanelConfig}
+            setSnackbarConfig={setSnackbarConfig}
             searchResults={searchResults}
             setSearchResults={setSearchResults}
             setConfirmDeletion={setConfirmDeletion}
@@ -63,13 +63,17 @@ export default function MainPage({
         </Container>
       </Sidepanel>
       <ApiStatusSnackbar
-        snackbarStatus={snackbarConfig}
-        setSnackbarStatus={setSnackbarConfig}
+        snackbarConfig={snackbarConfig}
+        setSnackbarConfig={setSnackbarConfig}
       />
       <ConfirmDeletionDialogue
         confirmDeletion={confirmDeletion}
         setConfirmDeletion={setConfirmDeletion}
-        sidePanelStatus={sidepanelConfig}
+        sidePanelConfig={sidepanelConfig}
+        setSidepanelConfig={setSidepanelConfig}
+        searchResults={searchResults}
+        setSearchResults={setSearchResults}
+        setSnackbarConfig={setSnackbarConfig}
       />
     </>
   );

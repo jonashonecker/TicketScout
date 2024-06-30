@@ -8,25 +8,56 @@ import {
 import CancelButton from "../buttons/CancelButton.tsx";
 import { Dispatch, SetStateAction } from "react";
 import DeleteButton from "../buttons/DeleteButton.tsx";
-import { SidepanelConfig } from "../../types/Config.ts";
+import { Config, SidepanelConfig } from "../../types/Config.ts";
+import { deleteTicket } from "../utils/ApiRequests.tsx";
+import { Ticket } from "../../types/Ticket.ts";
 
 type ConfirmDeletionDialogueProps = {
   confirmDeletion: boolean;
   setConfirmDeletion: Dispatch<SetStateAction<boolean>>;
-  sidePanelStatus: SidepanelConfig;
+  sidePanelConfig: SidepanelConfig;
+  setSidepanelConfig: Dispatch<SetStateAction<SidepanelConfig>>;
+  searchResults: Ticket[] | undefined;
+  setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
+  setSnackbarConfig: Dispatch<SetStateAction<Config>>;
 };
 
 export default function ConfirmDeletionDialogue({
   confirmDeletion,
   setConfirmDeletion,
-  sidePanelStatus,
+  sidePanelConfig,
+  setSidepanelConfig,
+  searchResults,
+  setSearchResults,
+  setSnackbarConfig,
 }: ConfirmDeletionDialogueProps) {
-  if (sidePanelStatus.formType !== "UpdateTicket") {
+  if (sidePanelConfig.formType !== "UpdateTicket") {
     return;
   }
 
-  const deleteTicket = () => {
-    console.log("Deleting ticket " + sidePanelStatus.ticket.id);
+  const handleDelete = () => {
+    deleteTicket(sidePanelConfig.ticket.id)
+      .then(() => {
+        setSearchResults(
+          searchResults?.filter((ticket) => {
+            return ticket.id !== sidePanelConfig.ticket.id;
+          }),
+        );
+        setSnackbarConfig({
+          open: true,
+          severity: "success",
+          message: "Ticket successfully deleted!",
+        });
+        setConfirmDeletion(false);
+        setSidepanelConfig({ ...sidePanelConfig, open: false });
+      })
+      .catch((error) => {
+        setSnackbarConfig({
+          open: true,
+          severity: "error",
+          message: error.response.data.error,
+        });
+      });
   };
 
   const handleClose = () => {
@@ -49,7 +80,7 @@ export default function ConfirmDeletionDialogue({
         </DialogContent>
         <DialogActions>
           <CancelButton onClick={handleClose} />
-          <DeleteButton onClick={deleteTicket} />
+          <DeleteButton onClick={handleDelete} />
         </DialogActions>
       </Dialog>
     </>
