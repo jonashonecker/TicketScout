@@ -8,12 +8,12 @@ import {
 import CancelButton from "../buttons/CancelButton.tsx";
 import { Dispatch, SetStateAction } from "react";
 import DeleteButton from "../buttons/DeleteButton.tsx";
-import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import { SidepanelConfig } from "../../types/SidepanelConfig.ts";
 
 type ConfirmDeletionDialogueProps = {
   confirmDeletion: boolean;
   setConfirmDeletion: Dispatch<SetStateAction<boolean>>;
-  sidePanelStatus: SidepanelStatus;
+  sidePanelStatus: SidepanelConfig;
 };
 
 export default function ConfirmDeletionDialogue({

@@ -5,11 +5,11 @@ import UserMenuButton from "../buttons/UserMenuButton.tsx";
 import MainMenuButton from "../buttons/MainMenuButton.tsx";
 import { User } from "../../types/User.ts";
 import { Dispatch, SetStateAction } from "react";
-import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import { SidepanelConfig } from "../../types/SidepanelConfig.ts";
 
 type NavBarProps = {
   user: User | null | undefined;
-  setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
+  setSidepanelStatus: Dispatch<SetStateAction<SidepanelConfig>>;
 };
 
 const StyledAppBar = styled(AppBar)({

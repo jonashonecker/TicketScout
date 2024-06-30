@@ -9,11 +9,11 @@ import {
 import TicketStatusChip from "../chip/TicketStatusChip.tsx";
 import { Ticket } from "../../types/Ticket.ts";
 import { Dispatch, SetStateAction } from "react";
-import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import { SidepanelConfig } from "../../types/SidepanelConfig.ts";
 
 type TicketCardProps = {
   ticket: Ticket;
-  setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
+  setSidepanelStatus: Dispatch<SetStateAction<SidepanelConfig>>;
 };
 
 export default function TicketCard({

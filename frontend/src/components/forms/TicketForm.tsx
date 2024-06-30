@@ -2,23 +2,23 @@ import { Box, Stack } from "@mui/material";
 import TicketStatusChip from "../chip/TicketStatusChip.tsx";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../types/User.ts";
-import { SnackbarStatus } from "../../types/SnackbarStatus.ts";
+import { SnackbarConfig } from "../../types/SnackbarConfig.ts";
 import CancelButton from "../buttons/CancelButton.tsx";
 import SaveButton from "../buttons/SaveButton.tsx";
 import TicketTitleInput from "../inputs/TicketTitleInput.tsx";
 import TicketDescriptionInput from "../inputs/TicketDescriptionInput.tsx";
 import ApiUtils from "../utils/ApiRequests.tsx";
 import Validation from "../utils/Validation.tsx";
-import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import { SidepanelConfig } from "../../types/SidepanelConfig.ts";
 import UpdateButton from "../buttons/UpdateButton.tsx";
 import { Ticket } from "../../types/Ticket.ts";
 import DeleteButton from "../buttons/DeleteButton.tsx";
 
 type TicketFormProps = {
   user: User | null | undefined;
-  sidePanelStatus: SidepanelStatus;
-  setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
-  setSnackbarStatus: Dispatch<SetStateAction<SnackbarStatus>>;
+  sidePanelStatus: SidepanelConfig;
+  setSidepanelStatus: Dispatch<SetStateAction<SidepanelConfig>>;
+  setSnackbarStatus: Dispatch<SetStateAction<SnackbarConfig>>;
   searchResults: Ticket[] | undefined;
   setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
   setConfirmDeletion: Dispatch<SetStateAction<boolean>>;

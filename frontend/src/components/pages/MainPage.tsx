@@ -6,10 +6,10 @@ import { Box, Container } from "@mui/material";
 import SearchForm from "../forms/SearchForm.tsx";
 import TicketForm from "../forms/TicketForm.tsx";
 import ApiStatusSnackbar from "../snackbar/ApiStatusSnackbar.tsx";
-import { SnackbarStatus } from "../../types/SnackbarStatus.ts";
+import { SnackbarConfig } from "../../types/SnackbarConfig.ts";
 import Sidepanel from "../sidepanel/Sidepanel.tsx";
 import TicketCardsGrid from "../layout/TicketCardsGrid.tsx";
-import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import { SidepanelConfig } from "../../types/SidepanelConfig.ts";
 import ConfirmDeletionDialogue from "../dialogues/ConfirmDeletionDialogue.tsx";
 
 type MainPageProps = {
@@ -23,11 +23,11 @@ export default function MainPage({
   searchResults,
   setSearchResults,
 }: Readonly<MainPageProps>) {
-  const [sidepanelStatus, setSidepanelStatus] = useState<SidepanelStatus>({
+  const [sidepanelConfig, setSidepanelConfig] = useState<SidepanelConfig>({
     open: false,
     formType: "NewTicket",
   });
-  const [snackbarStatus, setSnackbarStatus] = useState<SnackbarStatus>({
+  const [snackbarConfig, setSnackbarConfig] = useState<SnackbarConfig>({
     open: false,
     severity: "error",
     message: "Initial value",
@@ -36,26 +36,26 @@ export default function MainPage({
 
   return (
     <>
-      <MainNavBar user={user} setSidepanelStatus={setSidepanelStatus} />
+      <MainNavBar user={user} setSidepanelStatus={setSidepanelConfig} />
       <Container fixed sx={{ p: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <SearchForm setSearchResults={setSearchResults} />
         </Box>
         <TicketCardsGrid
           searchResults={searchResults}
-          setSidepanelStatus={setSidepanelStatus}
+          setSidepanelStatus={setSidepanelConfig}
         />
       </Container>
       <Sidepanel
-        sidepanelStatus={sidepanelStatus}
-        setSidepanelStatus={setSidepanelStatus}
+        sidepanelStatus={sidepanelConfig}
+        setSidepanelStatus={setSidepanelConfig}
       >
         <Container sx={{ p: 3 }}>
           <TicketForm
             user={user}
-            sidePanelStatus={sidepanelStatus}
-            setSidepanelStatus={setSidepanelStatus}
-            setSnackbarStatus={setSnackbarStatus}
+            sidePanelStatus={sidepanelConfig}
+            setSidepanelStatus={setSidepanelConfig}
+            setSnackbarStatus={setSnackbarConfig}
             searchResults={searchResults}
             setSearchResults={setSearchResults}
             setConfirmDeletion={setConfirmDeletion}
@@ -63,13 +63,13 @@ export default function MainPage({
         </Container>
       </Sidepanel>
       <ApiStatusSnackbar
-        snackbarStatus={snackbarStatus}
-        setSnackbarStatus={setSnackbarStatus}
+        snackbarStatus={snackbarConfig}
+        setSnackbarStatus={setSnackbarConfig}
       />
       <ConfirmDeletionDialogue
         confirmDeletion={confirmDeletion}
         setConfirmDeletion={setConfirmDeletion}
-        sidePanelStatus={sidepanelStatus}
+        sidePanelStatus={sidepanelConfig}
       />
     </>
   );

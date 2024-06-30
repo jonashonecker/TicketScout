@@ -1,14 +1,14 @@
 import { Ticket } from "./Ticket.ts";
 
-type NewTicketStatus = {
+type NewTicketConfig = {
   formType: "NewTicket";
   open: boolean;
 };
 
-type UpdateTicketStatus = {
+type UpdateTicketConfig = {
   formType: "UpdateTicket";
   open: boolean;
   ticket: Ticket;
 };
 
-export type SidepanelStatus = NewTicketStatus | UpdateTicketStatus;
+export type SidepanelConfig = NewTicketConfig | UpdateTicketConfig;

@@ -2,11 +2,11 @@ import { Box, Grow, useMediaQuery, useTheme } from "@mui/material";
 import { Ticket } from "../../types/Ticket.ts";
 import TicketCard from "../card/TicketCard.tsx";
 import { Dispatch, SetStateAction } from "react";
-import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import { SidepanelConfig } from "../../types/SidepanelConfig.ts";
 
 type TicketCardsGridProps = {
   searchResults: Ticket[] | undefined;
-  setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
+  setSidepanelStatus: Dispatch<SetStateAction<SidepanelConfig>>;
 };
 
 export default function TicketCardsGrid({

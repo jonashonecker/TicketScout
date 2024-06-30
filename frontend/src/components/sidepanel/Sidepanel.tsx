@@ -1,10 +1,10 @@
 import { Drawer, useMediaQuery, useTheme } from "@mui/material";
 import { Dispatch, ReactNode, SetStateAction } from "react";
-import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import { SidepanelConfig } from "../../types/SidepanelConfig.ts";
 
 type SidepanelProps = {
-  sidepanelStatus: SidepanelStatus;
-  setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
+  sidepanelStatus: SidepanelConfig;
+  setSidepanelStatus: Dispatch<SetStateAction<SidepanelConfig>>;
   children: ReactNode;
 };
 

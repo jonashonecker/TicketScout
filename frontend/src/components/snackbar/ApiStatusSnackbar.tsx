@@ -1,11 +1,11 @@
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { Dispatch, SetStateAction, SyntheticEvent } from "react";
-import { SnackbarStatus } from "../../types/SnackbarStatus.ts";
+import { SnackbarConfig } from "../../types/SnackbarConfig.ts";
 
 type ApiStatusSnackbarProps = {
-  snackbarStatus: SnackbarStatus;
-  setSnackbarStatus: Dispatch<SetStateAction<SnackbarStatus>>;
+  snackbarStatus: SnackbarConfig;
+  setSnackbarStatus: Dispatch<SetStateAction<SnackbarConfig>>;
 };
 
 export default function ApiStatusSnackbar({
