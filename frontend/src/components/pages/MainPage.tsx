@@ -10,6 +10,7 @@ import { SnackbarStatus } from "../../types/SnackbarStatus.ts";
 import Sidepanel from "../sidepanel/Sidepanel.tsx";
 import TicketCardsGrid from "../layout/TicketCardsGrid.tsx";
 import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import ConfirmDeletionDialogue from "../dialogues/ConfirmDeletionDialogue.tsx";
 
 type MainPageProps = {
   user: User | null | undefined;
@@ -31,6 +32,7 @@ export default function MainPage({
     severity: "error",
     message: "Initial value",
   });
+  const [confirmDeletion, setConfirmDeletion] = useState(false);
 
   return (
     <>
@@ -56,12 +58,18 @@ export default function MainPage({
             setSnackbarStatus={setSnackbarStatus}
             searchResults={searchResults}
             setSearchResults={setSearchResults}
+            setConfirmDeletion={setConfirmDeletion}
           />
         </Container>
       </Sidepanel>
       <ApiStatusSnackbar
         snackbarStatus={snackbarStatus}
         setSnackbarStatus={setSnackbarStatus}
+      />
+      <ConfirmDeletionDialogue
+        confirmDeletion={confirmDeletion}
+        setConfirmDeletion={setConfirmDeletion}
+        sidePanelStatus={sidepanelStatus}
       />
     </>
   );

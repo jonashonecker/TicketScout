@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import TicketStatusChip from "../chip/TicketStatusChip.tsx";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../types/User.ts";
@@ -12,6 +12,7 @@ import Validation from "../utils/Validation.tsx";
 import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
 import UpdateButton from "../buttons/UpdateButton.tsx";
 import { Ticket } from "../../types/Ticket.ts";
+import DeleteButton from "../buttons/DeleteButton.tsx";
 
 type TicketFormProps = {
   user: User | null | undefined;
@@ -20,6 +21,7 @@ type TicketFormProps = {
   setSnackbarStatus: Dispatch<SetStateAction<SnackbarStatus>>;
   searchResults: Ticket[] | undefined;
   setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
+  setConfirmDeletion: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function TicketForm({
@@ -29,6 +31,7 @@ export default function TicketForm({
   setSnackbarStatus,
   searchResults,
   setSearchResults,
+  setConfirmDeletion,
 }: Readonly<TicketFormProps>) {
   const [title, setTitle] = useState<string>("");
   const [titleError, setTitleError] = useState<boolean>(false);
@@ -142,6 +145,15 @@ export default function TicketForm({
         descriptionError={descriptionError}
       />
       <Stack direction="row" justifyContent={"end"} spacing={1} sx={{ mt: 2 }}>
+        {sidePanelStatus.formType == "UpdateTicket" && (
+          <Box sx={{ flexGrow: 1 }}>
+            <DeleteButton
+              onClick={() => {
+                setConfirmDeletion(true);
+              }}
+            />
+          </Box>
+        )}
         <CancelButton onClick={cancel} />
         {sidePanelStatus.formType == "NewTicket" && (
           <SaveButton onClick={save} />
