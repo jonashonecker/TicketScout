@@ -7,8 +7,8 @@ import CancelButton from "../buttons/CancelButton.tsx";
 import SaveButton from "../buttons/SaveButton.tsx";
 import TicketTitleInput from "../inputs/TicketTitleInput.tsx";
 import TicketDescriptionInput from "../inputs/TicketDescriptionInput.tsx";
-import ApiUtils from "../utils/ApiRequests.tsx";
-import Validation from "../utils/Validation.tsx";
+import { createNewTicket, updateTicket } from "../utils/ApiRequests.tsx";
+import { checkIfHtmlContainsText } from "../utils/Validation.tsx";
 import { SidepanelConfig } from "../../types/Config.ts";
 import UpdateButton from "../buttons/UpdateButton.tsx";
 import { Ticket } from "../../types/Ticket.ts";
@@ -59,7 +59,7 @@ export default function TicketForm({
     const [isTitleError, isDescriptionError] = validateTitleAndDescription();
 
     if (!isTitleError && !isDescriptionError) {
-      ApiUtils.createNewTicket({ title: title, description: description })
+      createNewTicket({ title: title, description: description })
         .then(() => {
           setSnackbarStatus({
             open: true,
@@ -82,7 +82,7 @@ export default function TicketForm({
     const [isTitleError, isDescriptionError] = validateTitleAndDescription();
 
     if (!isTitleError && !isDescriptionError) {
-      ApiUtils.updateTicket({
+      updateTicket({
         id:
           sidePanelStatus.formType == "UpdateTicket"
             ? sidePanelStatus.ticket.id
@@ -119,7 +119,7 @@ export default function TicketForm({
 
   function validateTitleAndDescription() {
     const isTitleError = !title.trim();
-    const isDescriptionError = !Validation.checkIfHtmlContainsText(description);
+    const isDescriptionError = !checkIfHtmlContainsText(description);
 
     setTitleError(isTitleError);
     setDescriptionError(isDescriptionError);

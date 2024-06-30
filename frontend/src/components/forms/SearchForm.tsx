@@ -2,7 +2,7 @@ import { Divider, IconButton, InputBase, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Ticket } from "../../types/Ticket.ts";
 import { Dispatch, SetStateAction, FormEvent } from "react";
-import ApiUtils from "../utils/ApiRequests.tsx";
+import { getAllTickets } from "../utils/ApiRequests.tsx";
 
 type SearchFormProps = {
   setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
@@ -13,9 +13,7 @@ export default function SearchForm({
 }: Readonly<SearchFormProps>) {
   function searchTickets(event: FormEvent) {
     event.preventDefault();
-    ApiUtils.getAllTickets().then((response) =>
-      setSearchResults(response.data),
-    );
+    getAllTickets().then((response) => setSearchResults(response.data));
   }
 
   return (

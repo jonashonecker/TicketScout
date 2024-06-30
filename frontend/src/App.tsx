@@ -6,7 +6,7 @@ import ProtectedRoute from "./components/utils/ProtectedRoute.tsx";
 import { User } from "./types/User.ts";
 import Theme from "./components/theme/Theme.tsx";
 import { Ticket } from "./types/Ticket.ts";
-import ApiUtils from "./components/utils/ApiRequests.tsx";
+import { getUser } from "./components/utils/ApiRequests.tsx";
 
 export default function App() {
   const [user, setUser] = useState<User | null | undefined>(undefined);
@@ -15,7 +15,7 @@ export default function App() {
   );
 
   const loadUser = () => {
-    ApiUtils.getUser()
+    getUser()
       .then((response) => {
         setUser(response.data);
       })
