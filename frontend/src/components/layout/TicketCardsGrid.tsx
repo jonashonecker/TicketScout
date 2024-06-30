@@ -2,7 +2,7 @@ import { Box, Grow, useMediaQuery, useTheme } from "@mui/material";
 import { Ticket } from "../../types/Ticket.ts";
 import TicketCard from "../card/TicketCard.tsx";
 import { Dispatch, SetStateAction } from "react";
-import { SidepanelConfig } from "../../types/SidepanelConfig.ts";
+import { SidepanelConfig } from "../../types/Config.ts";
 
 type TicketCardsGridProps = {
   searchResults: Ticket[] | undefined;

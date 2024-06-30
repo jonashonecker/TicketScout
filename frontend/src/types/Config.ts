@@ -12,3 +12,9 @@ type UpdateTicketConfig = {
 };
 
 export type SidepanelConfig = NewTicketConfig | UpdateTicketConfig;
+
+export type Config = {
+  open: boolean;
+  severity: "success" | "error";
+  message: string;
+};

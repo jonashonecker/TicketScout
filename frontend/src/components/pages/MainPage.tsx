@@ -6,10 +6,10 @@ import { Box, Container } from "@mui/material";
 import SearchForm from "../forms/SearchForm.tsx";
 import TicketForm from "../forms/TicketForm.tsx";
 import ApiStatusSnackbar from "../snackbar/ApiStatusSnackbar.tsx";
-import { SnackbarConfig } from "../../types/SnackbarConfig.ts";
+import { Config } from "../../types/Config.ts";
 import Sidepanel from "../sidepanel/Sidepanel.tsx";
 import TicketCardsGrid from "../layout/TicketCardsGrid.tsx";
-import { SidepanelConfig } from "../../types/SidepanelConfig.ts";
+import { SidepanelConfig } from "../../types/Config.ts";
 import ConfirmDeletionDialogue from "../dialogues/ConfirmDeletionDialogue.tsx";
 
 type MainPageProps = {
@@ -27,7 +27,7 @@ export default function MainPage({
     open: false,
     formType: "NewTicket",
   });
-  const [snackbarConfig, setSnackbarConfig] = useState<SnackbarConfig>({
+  const [snackbarConfig, setSnackbarConfig] = useState<Config>({
     open: false,
     severity: "error",
     message: "Initial value",

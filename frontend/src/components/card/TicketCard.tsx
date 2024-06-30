@@ -9,7 +9,7 @@ import {
 import TicketStatusChip from "../chip/TicketStatusChip.tsx";
 import { Ticket } from "../../types/Ticket.ts";
 import { Dispatch, SetStateAction } from "react";
-import { SidepanelConfig } from "../../types/SidepanelConfig.ts";
+import { SidepanelConfig } from "../../types/Config.ts";
 
 type TicketCardProps = {
   ticket: Ticket;

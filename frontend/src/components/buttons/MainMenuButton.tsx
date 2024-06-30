@@ -11,7 +11,7 @@ import { Dispatch, MouseEvent, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { SidepanelConfig } from "../../types/SidepanelConfig.ts";
+import { SidepanelConfig } from "../../types/Config.ts";
 
 type MainMenuButtonProps = {
   setSidepanelStatus: Dispatch<SetStateAction<SidepanelConfig>>;
