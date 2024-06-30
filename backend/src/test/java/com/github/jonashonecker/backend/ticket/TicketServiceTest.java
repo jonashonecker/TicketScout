@@ -159,4 +159,39 @@ class TicketServiceTest {
         verify(ticketRepository, times(1)).findById(id);
         assertEquals(expected, actual);
     }
+
+    @Test
+    void deleteTicket_whenIdDoesNotExist_throwNoSuchTicketException() {
+        //GIVEN
+        String id = "test-id";
+        when(ticketRepository.findById(id)).thenReturn(Optional.empty());
+
+        //WHEN
+        NoSuchTicketException actual = assertThrows(NoSuchTicketException.class, () -> ticketService.deleteTicket(id));
+
+        //THEN
+        assertEquals("Could not find ticket with id: " + id, actual.getMessage());
+    }
+
+    @Test
+    void deleteTicket_whenIdExist_thenGetTicketByIdAndDeleteTicketByIdIsCalled() {
+        //GIVEN
+        String id = "test-id";
+        Ticket ticket = new Ticket(
+                id,
+                "test-projectName",
+                "test-title",
+                "test-description",
+                Status.OPEN,
+                new TicketScoutUser("test-name", "test-avatarUrl")
+        );
+        when(ticketRepository.findById(id)).thenReturn(Optional.of(ticket));
+
+        //WHEN
+        ticketService.deleteTicket(id);
+
+        //THEN
+        verify(ticketRepository, times(1)).findById(id);
+        verify(ticketRepository, times(1)).delete(ticket);
+    }
 }

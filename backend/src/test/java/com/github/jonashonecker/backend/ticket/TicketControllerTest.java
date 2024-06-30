@@ -14,10 +14,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.anyOf;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -325,4 +328,23 @@ class TicketControllerTest {
                 .andExpect(jsonPath("$.error", containsString("title (Title must not be empty)")));
     }
 
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void deleteTicket_whenDeletingTicketFromRepository_thenOnlyTheSpecifiedTicketIsDeleted() throws Exception {
+        //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
+        Ticket ticketToDelete = new Ticket("1", "projectName", "titleToDelete", "description", Status.OPEN, ticketScoutUser);
+        Ticket ticketToKeep = new Ticket("2", "projectName", "titleToKeep", "description", Status.OPEN, ticketScoutUser);
+        ticketRepository.insert(ticketToDelete);
+        ticketRepository.insert(ticketToKeep);
+
+        //WHEN
+        mockMvc.perform(delete("/api/ticket/{id}", ticketToDelete.id()))
+                //THEN
+                .andExpect(status().isOk());
+
+        assertFalse(ticketRepository.findById(ticketToDelete.id()).isPresent());
+        assertTrue(ticketRepository.findById(ticketToKeep.id()).isPresent());
+    }
 }
