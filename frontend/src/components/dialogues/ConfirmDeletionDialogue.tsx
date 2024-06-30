@@ -30,7 +30,7 @@ export default function ConfirmDeletionDialogue({
   searchResults,
   setSearchResults,
   setSnackbarConfig,
-}: ConfirmDeletionDialogueProps) {
+}: Readonly<ConfirmDeletionDialogueProps>) {
   if (sidePanelConfig.formType !== "UpdateTicket") {
     return;
   }
@@ -65,24 +65,22 @@ export default function ConfirmDeletionDialogue({
   };
 
   return (
-    <>
-      <Dialog
-        open={confirmDeletion}
-        keepMounted
-        onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{"Confirm Deletion"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Do you really want to delete this ticket?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <CancelButton onClick={handleClose} />
-          <DeleteButton onClick={handleDelete} />
-        </DialogActions>
-      </Dialog>
-    </>
+    <Dialog
+      open={confirmDeletion}
+      keepMounted
+      onClose={handleClose}
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogTitle>{"Confirm Deletion"}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-slide-description">
+          Do you really want to delete this ticket?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <CancelButton onClick={handleClose} />
+        <DeleteButton onClick={handleDelete} />
+      </DialogActions>
+    </Dialog>
   );
 }
