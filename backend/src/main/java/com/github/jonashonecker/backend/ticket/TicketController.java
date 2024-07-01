@@ -1,8 +1,9 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.NewTicketDTO;
-import com.github.jonashonecker.backend.ticket.domain.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.UpdateTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.embedding.EmbeddingResponseDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.NewTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
+import com.github.jonashonecker.backend.ticket.domain.ticket.UpdateTicketDTO;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 

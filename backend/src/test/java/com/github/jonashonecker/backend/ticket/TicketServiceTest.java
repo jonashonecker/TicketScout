@@ -1,9 +1,9 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.NewTicketDTO;
-import com.github.jonashonecker.backend.ticket.domain.Status;
-import com.github.jonashonecker.backend.ticket.domain.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.UpdateTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.NewTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.Status;
+import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
+import com.github.jonashonecker.backend.ticket.domain.ticket.UpdateTicketDTO;
 import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
@@ -20,8 +20,9 @@ class TicketServiceTest {
     private final TicketRepository ticketRepository = mock();
     private final IdService idService = mock();
     private final UserService userService = mock();
+    private final EmbeddingService embeddingService = mock();
 
-    private final TicketService ticketService = new TicketService(ticketRepository, idService, userService);
+    private final TicketService ticketService = new TicketService(ticketRepository, idService, userService, embeddingService);
 
     @Test
     void getAllTickets_whenRepositoryEmpty_returnEmptyList() {

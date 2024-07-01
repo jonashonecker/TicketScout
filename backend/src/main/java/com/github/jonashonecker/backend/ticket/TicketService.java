@@ -1,9 +1,9 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.NewTicketDTO;
-import com.github.jonashonecker.backend.ticket.domain.Status;
-import com.github.jonashonecker.backend.ticket.domain.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.UpdateTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.NewTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.Status;
+import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
+import com.github.jonashonecker.backend.ticket.domain.ticket.UpdateTicketDTO;
 import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import org.springframework.stereotype.Service;
@@ -15,11 +15,13 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final IdService idService;
     private final UserService userService;
+    private final EmbeddingService embeddingService;
 
-    public TicketService(TicketRepository ticketRepository, IdService idService, UserService userService) {
+    public TicketService(TicketRepository ticketRepository, IdService idService, UserService userService, EmbeddingService embeddingService) {
         this.ticketRepository = ticketRepository;
         this.idService = idService;
         this.userService = userService;
+        this.embeddingService = embeddingService;
     }
 
     public List<Ticket> getAllTickets() {
