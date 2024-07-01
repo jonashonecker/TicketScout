@@ -1,4 +1,4 @@
-package com.github.jonashonecker.backend.ticket.domain;
+package com.github.jonashonecker.backend.ticket.domain.ticket;
 
 public enum Status {
     OPEN,

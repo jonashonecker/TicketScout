@@ -1,9 +1,9 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.NewTicketDTO;
-import com.github.jonashonecker.backend.ticket.domain.Status;
-import com.github.jonashonecker.backend.ticket.domain.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.UpdateTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.NewTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.Status;
+import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
+import com.github.jonashonecker.backend.ticket.domain.ticket.UpdateTicketDTO;
 import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import org.springframework.stereotype.Service;
@@ -13,13 +13,22 @@ import java.util.List;
 @Service
 public class TicketService {
     private final TicketRepository ticketRepository;
+    private final TicketRepositoryVectorSearch ticketRepositoryVectorSearch;
     private final IdService idService;
     private final UserService userService;
+    private final EmbeddingService embeddingService;
 
-    public TicketService(TicketRepository ticketRepository, IdService idService, UserService userService) {
+    public TicketService(TicketRepository ticketRepository, IdService idService, UserService userService, EmbeddingService embeddingService, TicketRepositoryVectorSearch ticketRepositoryVectorSearch) {
         this.ticketRepository = ticketRepository;
         this.idService = idService;
         this.userService = userService;
+        this.embeddingService = embeddingService;
+        this.ticketRepositoryVectorSearch = ticketRepositoryVectorSearch;
+    }
+
+    public List<Ticket> semanticSearch(String searchText) {
+        List<Double> embedding = embeddingService.getEmbeddingVectorFromSearchString(searchText);
+        return ticketRepositoryVectorSearch.findTicketsByVector(embedding);
     }
 
     public List<Ticket> getAllTickets() {
@@ -39,8 +48,9 @@ public class TicketService {
                 newTicketDTO.title(),
                 newTicketDTO.description(),
                 defaultStatus,
-                userService.getCurrentUser()
-        ));
+                userService.getCurrentUser(),
+                embeddingService.getEmbeddingVectorFromTicket(newTicketDTO))
+        );
     }
 
     public Ticket updateTicket(UpdateTicketDTO updateTicketDTO) {
@@ -51,8 +61,9 @@ public class TicketService {
                 updateTicketDTO.title(),
                 updateTicketDTO.description(),
                 existingTicket.status(),
-                existingTicket.author()
-        ));
+                existingTicket.author(),
+                embeddingService.getEmbeddingVectorFromTicket(updateTicketDTO))
+        );
     }
 
     public void deleteTicket(String id) {

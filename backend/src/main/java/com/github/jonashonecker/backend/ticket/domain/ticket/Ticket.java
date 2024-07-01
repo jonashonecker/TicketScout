@@ -1,7 +1,9 @@
-package com.github.jonashonecker.backend.ticket.domain;
+package com.github.jonashonecker.backend.ticket.domain.ticket;
 
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Document("tickets")
 public record Ticket(
@@ -10,6 +12,7 @@ public record Ticket(
         String title,
         String description,
         Status status,
-        TicketScoutUser author
+        TicketScoutUser author,
+        List<Double> titleAndDescriptionEmbedding
 ) {
 }

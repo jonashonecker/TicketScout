@@ -1,14 +1,15 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.NewTicketDTO;
-import com.github.jonashonecker.backend.ticket.domain.Status;
-import com.github.jonashonecker.backend.ticket.domain.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.UpdateTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.NewTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.Status;
+import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
+import com.github.jonashonecker.backend.ticket.domain.ticket.UpdateTicketDTO;
 import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,10 +19,12 @@ import static org.mockito.Mockito.*;
 class TicketServiceTest {
 
     private final TicketRepository ticketRepository = mock();
+    private final TicketRepositoryVectorSearch ticketRepositoryVectorSearch = mock();
     private final IdService idService = mock();
     private final UserService userService = mock();
+    private final EmbeddingService embeddingService = mock();
 
-    private final TicketService ticketService = new TicketService(ticketRepository, idService, userService);
+    private final TicketService ticketService = new TicketService(ticketRepository, idService, userService, embeddingService, ticketRepositoryVectorSearch);
 
     @Test
     void getAllTickets_whenRepositoryEmpty_returnEmptyList() {
@@ -58,7 +61,8 @@ class TicketServiceTest {
                 "test-title",
                 "test-description",
                 Status.OPEN,
-                new TicketScoutUser("test-name", "test-avatarUrl")
+                new TicketScoutUser("test-name", "test-avatarUrl"),
+                List.of(1.2D)
         );
 
         when(ticketRepository.findById(id)).thenReturn(Optional.of(expected));
@@ -80,7 +84,8 @@ class TicketServiceTest {
                 "test-title",
                 "test-description",
                 Status.IN_PROGRESS,
-                ticketScoutUser
+                ticketScoutUser,
+                List.of(1.2D)
         );
 
         when(ticketRepository.findAll()).thenReturn(List.of(ticket));
@@ -109,7 +114,8 @@ class TicketServiceTest {
                 "test-title",
                 "test-description",
                 defaultStatus,
-                ticketScoutUser
+                ticketScoutUser,
+                List.of(1.2D)
         );
 
         when(idService.getUUID()).thenReturn("1");
@@ -138,7 +144,8 @@ class TicketServiceTest {
                 "test-title",
                 description,
                 Status.OPEN,
-                new TicketScoutUser("test-name", "test-avatarUrl")
+                new TicketScoutUser("test-name", "test-avatarUrl"),
+                List.of(1.2D)
         );
         Ticket expected = new Ticket(
                 id,
@@ -146,7 +153,8 @@ class TicketServiceTest {
                 "new-updated-title",
                 ticketInDb.description(),
                 ticketInDb.status(),
-                ticketInDb.author()
+                ticketInDb.author(),
+                List.of(1.2D)
         );
         when(ticketRepository.findById(id)).thenReturn(Optional.of(ticketInDb));
         when(ticketRepository.save(expected)).thenReturn(expected);
@@ -183,7 +191,8 @@ class TicketServiceTest {
                 "test-title",
                 "test-description",
                 Status.OPEN,
-                new TicketScoutUser("test-name", "test-avatarUrl")
+                new TicketScoutUser("test-name", "test-avatarUrl"),
+                List.of(1.2D)
         );
         when(ticketRepository.findById(id)).thenReturn(Optional.of(ticket));
 

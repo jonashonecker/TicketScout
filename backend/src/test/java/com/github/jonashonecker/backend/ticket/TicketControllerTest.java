@@ -1,8 +1,11 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.Status;
-import com.github.jonashonecker.backend.ticket.domain.Ticket;
+import com.github.jonashonecker.backend.ticket.domain.ticket.Status;
+import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
+import okhttp3.mockwebserver.MockWebServer;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,7 +13,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.anyOf;
@@ -31,7 +40,26 @@ class TicketControllerTest {
     private TicketRepository ticketRepository;
 
     @Autowired
+    private static MockWebServer mockWebServer;
+
+    @Autowired
     private MockMvc mockMvc;
+
+    @BeforeAll
+    static void beforeAll() throws IOException {
+        mockWebServer = new MockWebServer();
+        mockWebServer.start();
+    }
+
+    @AfterAll
+    static void tearDown() throws IOException {
+        mockWebServer.shutdown();
+    }
+
+    @DynamicPropertySource
+    static void backendProperties(DynamicPropertyRegistry registry) {
+        registry.add("app.openai-embedding-baseUrl", () -> mockWebServer.url("/").toString());
+    }
 
     @Test
     void getAllTickets_whenUnauthenticated_returnUnauthorized() throws Exception {
@@ -70,7 +98,8 @@ class TicketControllerTest {
                 "test-title",
                 "test-description",
                 Status.IN_PROGRESS,
-                ticketScoutUser
+                ticketScoutUser,
+                List.of(new BigDecimal("1.2"))
         );
 
         ticketRepository.insert(ticket);
@@ -258,7 +287,8 @@ class TicketControllerTest {
                 "test-title",
                 "test-description",
                 Status.IN_PROGRESS,
-                ticketScoutUser
+                ticketScoutUser,
+                List.of(new BigDecimal("1.2"))
         ));
 
         //WHEN
@@ -334,8 +364,22 @@ class TicketControllerTest {
     void deleteTicket_whenDeletingTicketFromRepository_thenOnlyTheSpecifiedTicketIsDeleted() throws Exception {
         //GIVEN
         TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
-        Ticket ticketToDelete = new Ticket("1", "projectName", "titleToDelete", "description", Status.OPEN, ticketScoutUser);
-        Ticket ticketToKeep = new Ticket("2", "projectName", "titleToKeep", "description", Status.OPEN, ticketScoutUser);
+        Ticket ticketToDelete = new Ticket(
+                "1",
+                "projectName",
+                "titleToDelete",
+                "description",
+                Status.OPEN, ticketScoutUser
+                , List.of(new BigDecimal("1.2"))
+        );
+        Ticket ticketToKeep = new Ticket(
+                "2",
+                "projectName",
+                "titleToKeep",
+                "description",
+                Status.OPEN, ticketScoutUser,
+                List.of(new BigDecimal("1.2"))
+        );
         ticketRepository.insert(ticketToDelete);
         ticketRepository.insert(ticketToKeep);
 
