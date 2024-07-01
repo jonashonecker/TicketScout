@@ -9,6 +9,7 @@ import com.github.jonashonecker.backend.user.UserService;
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +60,8 @@ class TicketServiceTest {
                 "test-title",
                 "test-description",
                 Status.OPEN,
-                new TicketScoutUser("test-name", "test-avatarUrl")
+                new TicketScoutUser("test-name", "test-avatarUrl"),
+                List.of(new BigDecimal("1.2"))
         );
 
         when(ticketRepository.findById(id)).thenReturn(Optional.of(expected));
@@ -81,7 +83,8 @@ class TicketServiceTest {
                 "test-title",
                 "test-description",
                 Status.IN_PROGRESS,
-                ticketScoutUser
+                ticketScoutUser,
+                List.of(new BigDecimal("1.2"))
         );
 
         when(ticketRepository.findAll()).thenReturn(List.of(ticket));
@@ -110,7 +113,8 @@ class TicketServiceTest {
                 "test-title",
                 "test-description",
                 defaultStatus,
-                ticketScoutUser
+                ticketScoutUser,
+                List.of(new BigDecimal("1.2"))
         );
 
         when(idService.getUUID()).thenReturn("1");
@@ -139,7 +143,8 @@ class TicketServiceTest {
                 "test-title",
                 description,
                 Status.OPEN,
-                new TicketScoutUser("test-name", "test-avatarUrl")
+                new TicketScoutUser("test-name", "test-avatarUrl"),
+                List.of(new BigDecimal("1.2"))
         );
         Ticket expected = new Ticket(
                 id,
@@ -147,7 +152,8 @@ class TicketServiceTest {
                 "new-updated-title",
                 ticketInDb.description(),
                 ticketInDb.status(),
-                ticketInDb.author()
+                ticketInDb.author(),
+                List.of(new BigDecimal("1.2"))
         );
         when(ticketRepository.findById(id)).thenReturn(Optional.of(ticketInDb));
         when(ticketRepository.save(expected)).thenReturn(expected);
@@ -184,7 +190,8 @@ class TicketServiceTest {
                 "test-title",
                 "test-description",
                 Status.OPEN,
-                new TicketScoutUser("test-name", "test-avatarUrl")
+                new TicketScoutUser("test-name", "test-avatarUrl"),
+                List.of(new BigDecimal("1.2"))
         );
         when(ticketRepository.findById(id)).thenReturn(Optional.of(ticket));
 

@@ -8,6 +8,7 @@ import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -41,7 +42,8 @@ public class TicketService {
                 newTicketDTO.title(),
                 newTicketDTO.description(),
                 defaultStatus,
-                userService.getCurrentUser()
+                userService.getCurrentUser(),
+                List.of(new BigDecimal("1.2"))
         ));
     }
 
@@ -53,7 +55,8 @@ public class TicketService {
                 updateTicketDTO.title(),
                 updateTicketDTO.description(),
                 existingTicket.status(),
-                existingTicket.author()
+                existingTicket.author(),
+                List.of(new BigDecimal("1.2"))
         ));
     }
 
