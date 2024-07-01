@@ -31,4 +31,9 @@ public class TicketController {
     public Ticket updateTicket(@Valid @RequestBody UpdateTicketDTO updateTicketDTO) {
         return ticketService.updateTicket(updateTicketDTO);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteTicket(@PathVariable String id) {
+        ticketService.deleteTicket(id);
+    }
 }

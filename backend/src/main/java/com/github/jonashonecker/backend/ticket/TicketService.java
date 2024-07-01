@@ -54,4 +54,9 @@ public class TicketService {
                 existingTicket.author()
         ));
     }
+
+    public void deleteTicket(String id) {
+        Ticket ticket = getTicketById(id);
+        ticketRepository.delete(ticket);
+    }
 }

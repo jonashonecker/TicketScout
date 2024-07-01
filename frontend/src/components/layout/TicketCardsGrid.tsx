@@ -2,16 +2,16 @@ import { Box, Grow, useMediaQuery, useTheme } from "@mui/material";
 import { Ticket } from "../../types/Ticket.ts";
 import TicketCard from "../card/TicketCard.tsx";
 import { Dispatch, SetStateAction } from "react";
-import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import { SidepanelConfig } from "../../types/Config.ts";
 
 type TicketCardsGridProps = {
   searchResults: Ticket[] | undefined;
-  setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
+  setSidepanelConfig: Dispatch<SetStateAction<SidepanelConfig>>;
 };
 
 export default function TicketCardsGrid({
   searchResults,
-  setSidepanelStatus,
+  setSidepanelConfig,
 }: Readonly<TicketCardsGridProps>) {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.only("xs"));
@@ -51,7 +51,7 @@ export default function TicketCardsGrid({
               <Box>
                 <TicketCard
                   ticket={ticket}
-                  setSidepanelStatus={setSidepanelStatus}
+                  setSidepanelConfig={setSidepanelConfig}
                 />
               </Box>
             </Grow>

@@ -1,34 +1,36 @@
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import TicketStatusChip from "../chip/TicketStatusChip.tsx";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../types/User.ts";
-import { SnackbarStatus } from "../../types/SnackbarStatus.ts";
+import { SnackbarConfig, SidepanelConfig } from "../../types/Config.ts";
 import CancelButton from "../buttons/CancelButton.tsx";
 import SaveButton from "../buttons/SaveButton.tsx";
 import TicketTitleInput from "../inputs/TicketTitleInput.tsx";
 import TicketDescriptionInput from "../inputs/TicketDescriptionInput.tsx";
-import ApiUtils from "../utils/ApiRequests.tsx";
-import Validation from "../utils/Validation.tsx";
-import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import { createNewTicket, updateTicket } from "../utils/ApiRequests.tsx";
+import { checkIfHtmlContainsText } from "../utils/Validation.tsx";
 import UpdateButton from "../buttons/UpdateButton.tsx";
 import { Ticket } from "../../types/Ticket.ts";
+import DeleteButton from "../buttons/DeleteButton.tsx";
 
 type TicketFormProps = {
   user: User | null | undefined;
-  sidePanelStatus: SidepanelStatus;
-  setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
-  setSnackbarStatus: Dispatch<SetStateAction<SnackbarStatus>>;
+  sidePanelConfig: SidepanelConfig;
+  setSidepanelConfig: Dispatch<SetStateAction<SidepanelConfig>>;
+  setSnackbarConfig: Dispatch<SetStateAction<SnackbarConfig>>;
   searchResults: Ticket[] | undefined;
   setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
+  setConfirmDeletion: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function TicketForm({
   user,
-  sidePanelStatus,
-  setSidepanelStatus,
-  setSnackbarStatus,
+  sidePanelConfig,
+  setSidepanelConfig,
+  setSnackbarConfig,
   searchResults,
   setSearchResults,
+  setConfirmDeletion,
 }: Readonly<TicketFormProps>) {
   const [title, setTitle] = useState<string>("");
   const [titleError, setTitleError] = useState<boolean>(false);
@@ -37,36 +39,36 @@ export default function TicketForm({
   const [descriptionError, setDescriptionError] = useState<boolean>(false);
 
   useEffect(() => {
-    if (sidePanelStatus.formType == "UpdateTicket") {
-      setTitle(sidePanelStatus.ticket.title);
-      setDescription(sidePanelStatus.ticket.description);
-      setInitialDescription(sidePanelStatus.ticket.description);
+    if (sidePanelConfig.formType == "UpdateTicket") {
+      setTitle(sidePanelConfig.ticket.title);
+      setDescription(sidePanelConfig.ticket.description);
+      setInitialDescription(sidePanelConfig.ticket.description);
     } else {
       setTitle("");
       setDescription("");
       setInitialDescription("");
     }
-  }, [sidePanelStatus]);
+  }, [sidePanelConfig]);
 
   function cancel() {
-    setSidepanelStatus({ ...sidePanelStatus, open: false });
+    setSidepanelConfig({ ...sidePanelConfig, open: false });
   }
 
   function save() {
     const [isTitleError, isDescriptionError] = validateTitleAndDescription();
 
     if (!isTitleError && !isDescriptionError) {
-      ApiUtils.createNewTicket({ title: title, description: description })
+      createNewTicket({ title: title, description: description })
         .then(() => {
-          setSnackbarStatus({
+          setSnackbarConfig({
             open: true,
             severity: "success",
             message: "Ticket created successfully!",
           });
-          setSidepanelStatus({ ...sidePanelStatus, open: false });
+          setSidepanelConfig({ ...sidePanelConfig, open: false });
         })
         .catch((error) => {
-          setSnackbarStatus({
+          setSnackbarConfig({
             open: true,
             severity: "error",
             message: error.response.data.error,
@@ -79,10 +81,10 @@ export default function TicketForm({
     const [isTitleError, isDescriptionError] = validateTitleAndDescription();
 
     if (!isTitleError && !isDescriptionError) {
-      ApiUtils.updateTicket({
+      updateTicket({
         id:
-          sidePanelStatus.formType == "UpdateTicket"
-            ? sidePanelStatus.ticket.id
+          sidePanelConfig.formType == "UpdateTicket"
+            ? sidePanelConfig.ticket.id
             : "",
         title: title,
         description: description,
@@ -97,15 +99,15 @@ export default function TicketForm({
               }
             }),
           );
-          setSnackbarStatus({
+          setSnackbarConfig({
             open: true,
             severity: "success",
             message: "Ticket updated successfully!",
           });
-          setSidepanelStatus({ ...sidePanelStatus, open: false });
+          setSidepanelConfig({ ...sidePanelConfig, open: false });
         })
         .catch((error) => {
-          setSnackbarStatus({
+          setSnackbarConfig({
             open: true,
             severity: "error",
             message: error.response.data.error,
@@ -116,7 +118,7 @@ export default function TicketForm({
 
   function validateTitleAndDescription() {
     const isTitleError = !title.trim();
-    const isDescriptionError = !Validation.checkIfHtmlContainsText(description);
+    const isDescriptionError = !checkIfHtmlContainsText(description);
 
     setTitleError(isTitleError);
     setDescriptionError(isDescriptionError);
@@ -142,11 +144,20 @@ export default function TicketForm({
         descriptionError={descriptionError}
       />
       <Stack direction="row" justifyContent={"end"} spacing={1} sx={{ mt: 2 }}>
+        {sidePanelConfig.formType == "UpdateTicket" && (
+          <Box sx={{ flexGrow: 1 }}>
+            <DeleteButton
+              onClick={() => {
+                setConfirmDeletion(true);
+              }}
+            />
+          </Box>
+        )}
         <CancelButton onClick={cancel} />
-        {sidePanelStatus.formType == "NewTicket" && (
+        {sidePanelConfig.formType == "NewTicket" && (
           <SaveButton onClick={save} />
         )}
-        {sidePanelStatus.formType == "UpdateTicket" && (
+        {sidePanelConfig.formType == "UpdateTicket" && (
           <UpdateButton onClick={update} />
         )}
       </Stack>

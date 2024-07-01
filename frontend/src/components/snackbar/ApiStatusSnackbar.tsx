@@ -1,39 +1,39 @@
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { Dispatch, SetStateAction, SyntheticEvent } from "react";
-import { SnackbarStatus } from "../../types/SnackbarStatus.ts";
+import { SnackbarConfig } from "../../types/Config.ts";
 
 type ApiStatusSnackbarProps = {
-  snackbarStatus: SnackbarStatus;
-  setSnackbarStatus: Dispatch<SetStateAction<SnackbarStatus>>;
+  snackbarConfig: SnackbarConfig;
+  setSnackbarConfig: Dispatch<SetStateAction<SnackbarConfig>>;
 };
 
 export default function ApiStatusSnackbar({
-  snackbarStatus,
-  setSnackbarStatus,
+  snackbarConfig,
+  setSnackbarConfig,
 }: Readonly<ApiStatusSnackbarProps>) {
   const handleClose = (_event?: SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
 
-    setSnackbarStatus({ ...snackbarStatus, open: false });
+    setSnackbarConfig({ ...snackbarConfig, open: false });
   };
 
   return (
     <div>
       <Snackbar
-        open={snackbarStatus.open}
+        open={snackbarConfig.open}
         autoHideDuration={6000}
         onClose={handleClose}
       >
         <Alert
           onClose={handleClose}
-          severity={snackbarStatus.severity}
+          severity={snackbarConfig.severity}
           variant="filled"
           sx={{ width: "100%" }}
         >
-          {snackbarStatus.message}
+          {snackbarConfig.message}
         </Alert>
       </Snackbar>
     </div>

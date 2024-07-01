@@ -1,16 +1,16 @@
 import { Drawer, useMediaQuery, useTheme } from "@mui/material";
 import { Dispatch, ReactNode, SetStateAction } from "react";
-import { SidepanelStatus } from "../../types/SidepanelStatus.ts";
+import { SidepanelConfig } from "../../types/Config.ts";
 
 type SidepanelProps = {
-  sidepanelStatus: SidepanelStatus;
-  setSidepanelStatus: Dispatch<SetStateAction<SidepanelStatus>>;
+  sidepanelConfig: SidepanelConfig;
+  setSidepanelConfig: Dispatch<SetStateAction<SidepanelConfig>>;
   children: ReactNode;
 };
 
 export default function Sidepanel({
-  sidepanelStatus,
-  setSidepanelStatus,
+  sidepanelConfig,
+  setSidepanelConfig,
   children,
 }: Readonly<SidepanelProps>) {
   const theme = useTheme();
@@ -27,9 +27,9 @@ export default function Sidepanel({
   return (
     <Drawer
       anchor={isVerySmallScreen ? "bottom" : "right"}
-      open={sidepanelStatus.open}
+      open={sidepanelConfig.open}
       onClose={() => {
-        setSidepanelStatus({ ...sidepanelStatus, open: false });
+        setSidepanelConfig({ ...sidepanelConfig, open: false });
       }}
       PaperProps={{
         sx: {
