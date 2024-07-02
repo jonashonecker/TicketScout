@@ -98,6 +98,7 @@ class TicketServiceTest {
         //GIVEN
         String defaultProject = "Default Project";
         Status defaultStatus = Status.OPEN;
+        List<Double> embedding = List.of(1.5D);
         TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
         TicketRequestDTO ticketRequestDTO = new TicketRequestDTO(
                 "test-title",
@@ -111,12 +112,13 @@ class TicketServiceTest {
                 "test-description",
                 defaultStatus,
                 ticketScoutUser,
-                List.of(1.2D)
+                embedding
         );
 
         when(idService.getUUID()).thenReturn("1");
         when(userService.getCurrentUser()).thenReturn(ticketScoutUser);
         when(ticketRepository.insert(any(Ticket.class))).thenReturn(expected);
+        when(embeddingService.getEmbeddingVectorForTicket(ticketRequestDTO)).thenReturn(embedding);
 
         //WHEN
         Ticket actual = ticketService.createTicket(ticketRequestDTO);
@@ -125,6 +127,7 @@ class TicketServiceTest {
         verify(ticketRepository, times(1)).insert(expected);
         verify(idService, times(1)).getUUID();
         verify(userService, times(1)).getCurrentUser();
+        verify(embeddingService, times(1)).getEmbeddingVectorForTicket(ticketRequestDTO);
         assertEquals(expected, actual);
     }
 
@@ -133,6 +136,7 @@ class TicketServiceTest {
         //GIVEN
         String id = "test-id";
         String description = "test-description";
+        List<Double> embedding = List.of(1.5D);
         TicketRequestDTO ticketRequestDTO = new TicketRequestDTO( "new-updated-title", description);
         Ticket ticketInDb = new Ticket(
                 id,
@@ -141,7 +145,7 @@ class TicketServiceTest {
                 description,
                 Status.OPEN,
                 new TicketScoutUser("test-name", "test-avatarUrl"),
-                List.of(1.2D)
+                embedding
         );
         Ticket expected = new Ticket(
                 id,
@@ -150,10 +154,11 @@ class TicketServiceTest {
                 ticketInDb.description(),
                 ticketInDb.status(),
                 ticketInDb.author(),
-                List.of(1.2D)
+                embedding
         );
         when(ticketRepository.findById(id)).thenReturn(Optional.of(ticketInDb));
         when(ticketRepository.save(expected)).thenReturn(expected);
+        when(embeddingService.getEmbeddingVectorForTicket(ticketRequestDTO)).thenReturn(embedding);
 
         //WHEN
         Ticket actual = ticketService.updateTicket(ticketRequestDTO, id);
@@ -161,6 +166,7 @@ class TicketServiceTest {
         //THEN
         verify(ticketRepository, times(1)).save(expected);
         verify(ticketRepository, times(1)).findById(id);
+        verify(embeddingService, times(1)).getEmbeddingVectorForTicket(ticketRequestDTO);
         assertEquals(expected, actual);
     }
 

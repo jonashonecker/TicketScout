@@ -3,6 +3,7 @@ package com.github.jonashonecker.backend.ticket;
 import com.github.jonashonecker.backend.ticket.domain.ticket.Status;
 import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
+import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +19,6 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
@@ -39,7 +39,6 @@ class TicketControllerTest {
     @Autowired
     private TicketRepository ticketRepository;
 
-    @Autowired
     private static MockWebServer mockWebServer;
 
     @Autowired
@@ -99,7 +98,7 @@ class TicketControllerTest {
                 "test-description",
                 Status.IN_PROGRESS,
                 ticketScoutUser,
-                List.of(new BigDecimal("1.2"))
+                List.of(1.2D)
         );
 
         ticketRepository.insert(ticket);
@@ -146,6 +145,18 @@ class TicketControllerTest {
         String defaultProjectName = "Default Project";
         String defaultStatus = Status.OPEN.toString();
 
+        mockWebServer.enqueue(new MockResponse()
+                .setBody("""
+                        {
+                          "data": [{
+                            "object": "embedding",
+                            "embedding": [0.1]
+                            }
+                          ]
+                        }
+                        """)
+                .addHeader("Content-Type", "application/json"));
+
         //WHEN
         mockMvc.perform(post("/api/ticket").with(oidcLogin().userInfoToken(token -> token
                                 .claim("login", ticketScoutUser.name())
@@ -166,8 +177,8 @@ class TicketControllerTest {
                 .andExpect(jsonPath("$.projectName").value(defaultProjectName))
                 .andExpect(jsonPath("$.status").value(defaultStatus))
                 .andExpect(jsonPath("$.author.name").value(ticketScoutUser.name()))
-                .andExpect(jsonPath("$.author.avatarUrl").value(ticketScoutUser.avatarUrl()));
-
+                .andExpect(jsonPath("$.author.avatarUrl").value(ticketScoutUser.avatarUrl()))
+                .andExpect(jsonPath("$.titleAndDescriptionEmbedding").doesNotExist());
     }
 
     @Test
@@ -288,15 +299,26 @@ class TicketControllerTest {
                 "test-description",
                 Status.IN_PROGRESS,
                 ticketScoutUser,
-                List.of(new BigDecimal("1.2"))
+                List.of(1.2D)
         ));
 
+        mockWebServer.enqueue(new MockResponse()
+                .setBody("""
+                        {
+                          "data": [{
+                            "object": "embedding",
+                            "embedding": [0.1]
+                            }
+                          ]
+                        }
+                        """)
+                .addHeader("Content-Type", "application/json"));
+
         //WHEN
-        mockMvc.perform(put("/api/ticket")
+        mockMvc.perform(put("/api/ticket/test-id")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                "id": "test-id",
                                 "title": "updated-title",
                                 "description": "updated-description"
                                 }
@@ -320,11 +342,10 @@ class TicketControllerTest {
     void updateTicket_whenTicketNotInRepository_returnApiErrorMessage() throws Exception {
         //GIVEN
         //WHEN
-        mockMvc.perform(put("/api/ticket")
+        mockMvc.perform(put("/api/ticket/test-id")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                "id": "test-id",
                                 "title": "test-title",
                                 "description": "test-description"
                                 }
@@ -340,11 +361,10 @@ class TicketControllerTest {
     void updateTicket_whenInvalidIdAndTitleAndDescription_thenReturnApiErrorMessage() throws Exception {
         //GIVEN
         //WHEN
-        mockMvc.perform(put("/api/ticket")
+        mockMvc.perform(put("/api/ticket/test-id")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                  "id": "",
                                   "title": "",
                                   "description": ""
                                 }
@@ -354,7 +374,6 @@ class TicketControllerTest {
                 .andExpect(jsonPath("$.error", containsString("Input validation failed for")))
                 .andExpect(jsonPath("$.error", containsString("and")))
                 .andExpect(jsonPath("$.error", containsString("description (Description must not be empty)")))
-                .andExpect(jsonPath("$.error", containsString("id (Id must not be empty)")))
                 .andExpect(jsonPath("$.error", containsString("title (Title must not be empty)")));
     }
 
@@ -370,7 +389,7 @@ class TicketControllerTest {
                 "titleToDelete",
                 "description",
                 Status.OPEN, ticketScoutUser
-                , List.of(new BigDecimal("1.2"))
+                , List.of(1.2D)
         );
         Ticket ticketToKeep = new Ticket(
                 "2",
@@ -378,7 +397,7 @@ class TicketControllerTest {
                 "titleToKeep",
                 "description",
                 Status.OPEN, ticketScoutUser,
-                List.of(new BigDecimal("1.2"))
+                List.of(1.2D)
         );
         ticketRepository.insert(ticketToDelete);
         ticketRepository.insert(ticketToKeep);

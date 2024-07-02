@@ -33,7 +33,7 @@ public class EmbeddingService {
         return getEmbeddingVector(searchText);
     }
 
-    public List<Double> getEmbeddingVector(String text) {
+    private List<Double> getEmbeddingVector(String text) {
         EmbeddingResponseDTO response = this.restClient.post()
                 .body(new EmbeddingRequestDTO(text))
                 .retrieve()
