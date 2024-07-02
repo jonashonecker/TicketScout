@@ -2,9 +2,11 @@ package com.github.jonashonecker.backend.ticket;
 
 import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
 import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import org.bson.conversions.Bson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -16,23 +18,32 @@ import static com.mongodb.client.model.search.SearchPath.fieldPath;
 @Repository
 public class TicketRepositoryVectorSearch {
 
-    private final MongoDatabase mongoDatabase;
+    private final MongoClient mongoClient;
 
-    public TicketRepositoryVectorSearch(MongoDatabase mongoDatabase) {
-        this.mongoDatabase = mongoDatabase;
+    @Value("${spring.data.mongodb.database}")
+    private String databaseName;
+
+    @Value("${vectorSearch.index.name}")
+    private String indexName;
+
+    @Value("${vectorSearch.index.fieldPath}")
+    private String fieldPath;
+
+    @Autowired
+    public TicketRepositoryVectorSearch(MongoClient mongoClient) {
+        this.mongoClient = mongoClient;
     }
 
     private MongoCollection<Ticket> getTicketCollection() {
-        return mongoDatabase.getCollection("tickets", Ticket.class);
+        return mongoClient.getDatabase(databaseName).getCollection("tickets", Ticket.class);
     }
 
     public List<Ticket> findTicketsByVector(List<Double> embedding) {
-        String indexName = "vector_index_titleAndDescription";
         int numCandidates = 100;
         int limit = 5;
         List<Bson> pipeline = List.of(
                 vectorSearch(
-                        fieldPath("titleAndDescriptionEmbedding"),
+                        fieldPath(fieldPath),
                         embedding,
                         indexName,
                         numCandidates,
