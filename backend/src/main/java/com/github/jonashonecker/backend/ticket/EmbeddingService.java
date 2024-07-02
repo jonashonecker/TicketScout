@@ -25,11 +25,11 @@ public class EmbeddingService {
                 .build();
     }
 
-    public List<Double> getEmbeddingVectorFromTicket(TicketWithTitleAndDescription ticket) {
+    public List<Double> getEmbeddingVectorForTicket(TicketWithTitleAndDescription ticket) {
         return getEmbeddingVector("<h1>" + ticket.title() + "</h1>" + ticket.description());
     }
 
-    public List<Double> getEmbeddingVectorFromSearchString(String searchText) {
+    public List<Double> getEmbeddingVectorForSearchText(String searchText) {
         return getEmbeddingVector(searchText);
     }
 

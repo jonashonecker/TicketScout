@@ -26,8 +26,8 @@ public class TicketService {
         this.ticketRepositoryVectorSearch = ticketRepositoryVectorSearch;
     }
 
-    public List<Ticket> semanticSearch(String searchText) {
-        List<Double> embedding = embeddingService.getEmbeddingVectorFromSearchString(searchText);
+    public List<Ticket> getTicketsByVectorSearch(String searchText) {
+        List<Double> embedding = embeddingService.getEmbeddingVectorForSearchText(searchText);
         return ticketRepositoryVectorSearch.findTicketsByVector(embedding);
     }
 
@@ -49,7 +49,7 @@ public class TicketService {
                 newTicketDTO.description(),
                 defaultStatus,
                 userService.getCurrentUser(),
-                embeddingService.getEmbeddingVectorFromTicket(newTicketDTO))
+                embeddingService.getEmbeddingVectorForTicket(newTicketDTO))
         );
     }
 
@@ -62,7 +62,7 @@ public class TicketService {
                 updateTicketDTO.description(),
                 existingTicket.status(),
                 existingTicket.author(),
-                embeddingService.getEmbeddingVectorFromTicket(updateTicketDTO))
+                embeddingService.getEmbeddingVectorForTicket(updateTicketDTO))
         );
     }
 

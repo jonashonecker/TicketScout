@@ -1,6 +1,5 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.embedding.EmbeddingResponseDTO;
 import com.github.jonashonecker.backend.ticket.domain.ticket.NewTicketDTO;
 import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
 import com.github.jonashonecker.backend.ticket.domain.ticket.UpdateTicketDTO;
@@ -23,7 +22,7 @@ public class TicketController {
         if (searchText == null) {
             return ticketService.getAllTickets();
         }
-        return ticketService.semanticSearch(searchText);
+        return ticketService.getTicketsByVectorSearch(searchText);
     }
 
     @PostMapping
