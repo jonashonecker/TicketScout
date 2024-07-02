@@ -47,9 +47,6 @@ public class TicketRepositoryVectorSearch {
                         numCandidates,
                         limit));
         AggregateIterable<Ticket> iterable = getTicketCollection().aggregate(pipeline, Ticket.class);
-
-        List<Ticket> tickets = new ArrayList<>();
-        iterable.into(tickets);
-        return tickets;
+        return iterable.into(new ArrayList<>());
     }
 }
