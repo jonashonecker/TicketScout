@@ -2,11 +2,13 @@ package com.github.jonashonecker.backend.ticket;
 
 import com.github.jonashonecker.backend.ticket.domain.ticket.NewTicketDTO;
 import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
+import com.github.jonashonecker.backend.ticket.domain.ticket.TicketDTO;
 import com.github.jonashonecker.backend.ticket.domain.ticket.UpdateTicketDTO;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.function.Function;
 
 @RestController
 @RequestMapping("/api/ticket")
@@ -17,22 +19,31 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
+    private final Function<Ticket, TicketDTO> ticketToDtoMapper = ticket -> new TicketDTO(
+            ticket.id(),
+            ticket.projectName(),
+            ticket.title(),
+            ticket.description(),
+            ticket.status(),
+            ticket.author()
+    );
+
     @GetMapping
-    public List<Ticket> getAllTickets(@RequestParam(required = false) String searchText) {
-        if (searchText == null) {
-            return ticketService.getAllTickets();
-        }
-        return ticketService.getTicketsByVectorSearch(searchText);
+    public List<TicketDTO> getAllTickets(@RequestParam(required = false) String searchText) {
+        List<Ticket> tickets = searchText == null ? ticketService.getAllTickets() : ticketService.getTicketsByVectorSearch(searchText);
+        return tickets.stream().map(ticketToDtoMapper).toList();
     }
 
     @PostMapping
-    public Ticket createTicket(@Valid @RequestBody NewTicketDTO newTicketDTO) {
-        return ticketService.createTicket(newTicketDTO);
+    public TicketDTO createTicket(@Valid @RequestBody NewTicketDTO newTicketDTO) {
+        Ticket ticket = ticketService.createTicket(newTicketDTO);
+        return ticketToDtoMapper.apply(ticket);
     }
 
     @PutMapping
-    public Ticket updateTicket(@Valid @RequestBody UpdateTicketDTO updateTicketDTO) {
-        return ticketService.updateTicket(updateTicketDTO);
+    public TicketDTO updateTicket(@Valid @RequestBody UpdateTicketDTO updateTicketDTO) {
+        Ticket ticket = ticketService.updateTicket(updateTicketDTO);
+        return ticketToDtoMapper.apply(ticket);
     }
 
     @DeleteMapping("/{id}")
