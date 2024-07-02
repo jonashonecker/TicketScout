@@ -205,4 +205,23 @@ class TicketServiceTest {
         verify(ticketRepository, times(1)).findById(id);
         verify(ticketRepository, times(1)).delete(ticket);
     }
+
+    @Test
+    void getTicketsByVectorSearch_withValidSearchText_returnsMatchingTickets() {
+        // GIVEN
+        String searchText = "test search";
+        List<Double> embedding = List.of(1.0, 2.0);
+        Ticket expectedTicket = new Ticket("1", "Default Project", "Title", "Description", Status.OPEN, new TicketScoutUser("name", "avatarUrl"), embedding);
+        when(embeddingService.getEmbeddingVectorForSearchText(searchText)).thenReturn(embedding);
+        when(ticketRepositoryVectorSearch.findTicketsByVector(embedding)).thenReturn(List.of(expectedTicket));
+
+        // WHEN
+        List<Ticket> actualTickets = ticketService.getTicketsByVectorSearch(searchText);
+
+        // THEN
+        assertEquals(List.of(expectedTicket), actualTickets);
+        verify(embeddingService, times(1)).getEmbeddingVectorForSearchText(searchText);
+        verify(ticketRepositoryVectorSearch, times(1)).findTicketsByVector(embedding);
+    }
+
 }
