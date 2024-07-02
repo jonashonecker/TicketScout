@@ -5,7 +5,6 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import org.bson.conversions.Bson;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -29,7 +28,6 @@ public class TicketRepositoryVectorSearch {
     @Value("${vectorSearch.index.fieldPath}")
     private String fieldPath;
 
-    @Autowired
     public TicketRepositoryVectorSearch(MongoClient mongoClient) {
         this.mongoClient = mongoClient;
     }
