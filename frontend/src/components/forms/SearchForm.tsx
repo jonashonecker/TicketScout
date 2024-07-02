@@ -1,7 +1,7 @@
 import { Divider, IconButton, InputBase, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Ticket } from "../../types/Ticket.ts";
-import { Dispatch, SetStateAction, FormEvent } from "react";
+import { Dispatch, SetStateAction, FormEvent, useState } from "react";
 import { getAllTickets } from "../utils/ApiRequests.tsx";
 
 type SearchFormProps = {
@@ -13,8 +13,12 @@ export default function SearchForm({
 }: Readonly<SearchFormProps>) {
   function searchTickets(event: FormEvent) {
     event.preventDefault();
-    getAllTickets().then((response) => setSearchResults(response.data));
+    getAllTickets(searchText).then((response) =>
+      setSearchResults(response.data),
+    );
   }
+
+  const [searchText, setSearchTest] = useState<string>("");
 
   return (
     <Paper
@@ -24,7 +28,9 @@ export default function SearchForm({
       <InputBase
         sx={{ ml: 1, flex: 1 }}
         placeholder="Search your tickets"
-        inputProps={{ "aria-label": "search google maps" }}
+        inputProps={{ "aria-label": "search TicketScout" }}
+        value={searchText}
+        onChange={(event) => setSearchTest(event.target.value)}
       />
       <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
       <IconButton

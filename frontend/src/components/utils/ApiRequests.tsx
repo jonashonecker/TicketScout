@@ -6,8 +6,13 @@ export function getUser(): Promise<AxiosResponse<User>> {
   return axios.get("/api/auth/me");
 }
 
-export function getAllTickets(): Promise<AxiosResponse<Ticket[]>> {
-  return axios.get("/api/ticket");
+export function getAllTickets(
+  searchText?: string,
+): Promise<AxiosResponse<Ticket[]>> {
+  const url = searchText
+    ? `/api/ticket?searchText=${encodeURIComponent(searchText)}`
+    : "/api/ticket";
+  return axios.get(url);
 }
 
 export function createNewTicket(
