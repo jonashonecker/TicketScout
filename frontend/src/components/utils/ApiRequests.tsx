@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { NewTicket, Ticket, UpdateTicket } from "../../types/Ticket.ts";
+import { Ticket, TicketRequestDTO } from "../../types/Ticket.ts";
 import { User } from "../../types/User.ts";
 
 export function getUser(): Promise<AxiosResponse<User>> {
@@ -16,15 +16,16 @@ export function getAllTickets(
 }
 
 export function createNewTicket(
-  data: NewTicket,
+  data: TicketRequestDTO,
 ): Promise<AxiosResponse<Ticket>> {
   return axios.post("/api/ticket", data);
 }
 
 export function updateTicket(
-  data: UpdateTicket,
+  id: string,
+  data: TicketRequestDTO,
 ): Promise<AxiosResponse<Ticket>> {
-  return axios.put("/api/ticket", data);
+  return axios.put(`/api/ticket/${id}`, data);
 }
 
 export function deleteTicket(id: string) {

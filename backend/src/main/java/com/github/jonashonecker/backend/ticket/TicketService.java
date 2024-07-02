@@ -1,9 +1,6 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.ticket.NewTicketDTO;
-import com.github.jonashonecker.backend.ticket.domain.ticket.Status;
-import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.ticket.UpdateTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.*;
 import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import org.springframework.stereotype.Service;
@@ -39,30 +36,30 @@ public class TicketService {
         return ticketRepository.findById(id).orElseThrow(() -> new NoSuchTicketException("Could not find ticket with id: " + id));
     }
 
-    public Ticket createTicket(NewTicketDTO newTicketDTO) {
+    public Ticket createTicket(TicketRequestDTO ticketRequestDTO) {
         String defaultProjectName = "Default Project";
         Status defaultStatus = Status.OPEN;
         return ticketRepository.insert(new Ticket(
                 idService.getUUID(),
                 defaultProjectName,
-                newTicketDTO.title(),
-                newTicketDTO.description(),
+                ticketRequestDTO.title(),
+                ticketRequestDTO.description(),
                 defaultStatus,
                 userService.getCurrentUser(),
-                embeddingService.getEmbeddingVectorForTicket(newTicketDTO))
+                embeddingService.getEmbeddingVectorForTicket(ticketRequestDTO))
         );
     }
 
-    public Ticket updateTicket(UpdateTicketDTO updateTicketDTO) {
-        Ticket existingTicket = getTicketById(updateTicketDTO.id());
+    public Ticket updateTicket(TicketRequestDTO ticketRequestDTO, String id) {
+        Ticket existingTicket = getTicketById(id);
         return ticketRepository.save(new Ticket(
                 existingTicket.id(),
                 existingTicket.projectName(),
-                updateTicketDTO.title(),
-                updateTicketDTO.description(),
+                ticketRequestDTO.title(),
+                ticketRequestDTO.description(),
                 existingTicket.status(),
                 existingTicket.author(),
-                embeddingService.getEmbeddingVectorForTicket(updateTicketDTO))
+                embeddingService.getEmbeddingVectorForTicket(ticketRequestDTO))
         );
     }
 

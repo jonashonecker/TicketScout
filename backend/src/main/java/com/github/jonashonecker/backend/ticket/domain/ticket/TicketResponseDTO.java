@@ -2,7 +2,7 @@ package com.github.jonashonecker.backend.ticket.domain.ticket;
 
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
 
-public record TicketDTO(
+public record TicketResponseDTO(
         String id,
         String projectName,
         String title,

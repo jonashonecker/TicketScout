@@ -1,15 +1,11 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.ticket.NewTicketDTO;
-import com.github.jonashonecker.backend.ticket.domain.ticket.Status;
-import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.ticket.UpdateTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.*;
 import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -103,7 +99,7 @@ class TicketServiceTest {
         String defaultProject = "Default Project";
         Status defaultStatus = Status.OPEN;
         TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
-        NewTicketDTO newTicketDTO = new NewTicketDTO(
+        TicketRequestDTO ticketRequestDTO = new TicketRequestDTO(
                 "test-title",
                 "test-description"
         );
@@ -123,7 +119,7 @@ class TicketServiceTest {
         when(ticketRepository.insert(any(Ticket.class))).thenReturn(expected);
 
         //WHEN
-        Ticket actual = ticketService.createTicket(newTicketDTO);
+        Ticket actual = ticketService.createTicket(ticketRequestDTO);
 
         //THEN
         verify(ticketRepository, times(1)).insert(expected);
@@ -137,7 +133,7 @@ class TicketServiceTest {
         //GIVEN
         String id = "test-id";
         String description = "test-description";
-        UpdateTicketDTO updateTicketDTO = new UpdateTicketDTO(id, "new-updated-title", description);
+        TicketRequestDTO ticketRequestDTO = new TicketRequestDTO( "new-updated-title", description);
         Ticket ticketInDb = new Ticket(
                 id,
                 "test-projectName",
@@ -160,7 +156,7 @@ class TicketServiceTest {
         when(ticketRepository.save(expected)).thenReturn(expected);
 
         //WHEN
-        Ticket actual = ticketService.updateTicket(updateTicketDTO);
+        Ticket actual = ticketService.updateTicket(ticketRequestDTO, id);
 
         //THEN
         verify(ticketRepository, times(1)).save(expected);

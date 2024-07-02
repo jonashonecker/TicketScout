@@ -1,9 +1,6 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.ticket.NewTicketDTO;
-import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.ticket.TicketDTO;
-import com.github.jonashonecker.backend.ticket.domain.ticket.UpdateTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.*;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +16,7 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
-    private final Function<Ticket, TicketDTO> ticketToDtoMapper = ticket -> new TicketDTO(
+    private final Function<Ticket, TicketResponseDTO> ticketToDtoMapper = ticket -> new TicketResponseDTO(
             ticket.id(),
             ticket.projectName(),
             ticket.title(),
@@ -29,20 +26,22 @@ public class TicketController {
     );
 
     @GetMapping
-    public List<TicketDTO> getAllTickets(@RequestParam(required = false) String searchText) {
+    public List<TicketResponseDTO> getAllTickets(@RequestParam(required = false) String searchText) {
         List<Ticket> tickets = searchText == null ? ticketService.getAllTickets() : ticketService.getTicketsByVectorSearch(searchText);
         return tickets.stream().map(ticketToDtoMapper).toList();
     }
 
     @PostMapping
-    public TicketDTO createTicket(@Valid @RequestBody NewTicketDTO newTicketDTO) {
-        Ticket ticket = ticketService.createTicket(newTicketDTO);
+    public TicketResponseDTO createTicket(@Valid @RequestBody TicketRequestDTO ticketRequestDTO) {
+        Ticket ticket = ticketService.createTicket(ticketRequestDTO);
         return ticketToDtoMapper.apply(ticket);
     }
 
-    @PutMapping
-    public TicketDTO updateTicket(@Valid @RequestBody UpdateTicketDTO updateTicketDTO) {
-        Ticket ticket = ticketService.updateTicket(updateTicketDTO);
+    @PutMapping("/{id}")
+    public TicketResponseDTO updateTicket(
+            @Valid @RequestBody TicketRequestDTO ticketRequestDTO,
+            @PathVariable String id) {
+        Ticket ticket = ticketService.updateTicket(ticketRequestDTO, id);
         return ticketToDtoMapper.apply(ticket);
     }
 
