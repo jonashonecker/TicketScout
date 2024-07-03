@@ -75,8 +75,12 @@ class TicketControllerTest {
     @WithMockUser
     void getAllTickets_whenRepositoryEmpty_returnEmptyBody() throws Exception {
         //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
         //WHEN
-        mockMvc.perform(get("/api/ticket"))
+        mockMvc.perform(get("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                        .claim("login", ticketScoutUser.name())
+                        .claim("avatar_url", ticketScoutUser.avatarUrl())
+                )))
                 //THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
@@ -104,7 +108,10 @@ class TicketControllerTest {
         ticketRepository.insert(ticket);
 
         //WHEN
-        mockMvc.perform(get("/api/ticket"))
+        mockMvc.perform(get("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                        .claim("login", ticketScoutUser.name())
+                        .claim("avatar_url", ticketScoutUser.avatarUrl())
+                )))
                 //THEN
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
@@ -257,12 +264,27 @@ class TicketControllerTest {
     }
 
     @Test
-    @DirtiesContext
     @WithMockUser
+    @DirtiesContext
     void createTicket_whenInvalidUser_thenReturnApiErrorMessage() throws Exception {
         //GIVEN
+        mockWebServer.enqueue(new MockResponse()
+                .setBody("""
+                        {
+                          "data": [{
+                            "object": "embedding",
+                            "embedding": [0.1]
+                            }
+                          ]
+                        }
+                        """)
+                .addHeader("Content-Type", "application/json"));
+
         //WHEN
-        mockMvc.perform(post("/api/ticket")
+        mockMvc.perform(post("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", "test-user")
+                                .claim("avatar_url", "avatar-url")
+                        ))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -315,7 +337,10 @@ class TicketControllerTest {
                 .addHeader("Content-Type", "application/json"));
 
         //WHEN
-        mockMvc.perform(put("/api/ticket/test-id")
+        mockMvc.perform(put("/api/ticket/test-id").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", ticketScoutUser.name())
+                                .claim("avatar_url", ticketScoutUser.avatarUrl())
+                        ))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -341,8 +366,12 @@ class TicketControllerTest {
     @WithMockUser
     void updateTicket_whenTicketNotInRepository_returnApiErrorMessage() throws Exception {
         //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
         //WHEN
-        mockMvc.perform(put("/api/ticket/test-id")
+        mockMvc.perform(put("/api/ticket/test-id").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", ticketScoutUser.name())
+                                .claim("avatar_url", ticketScoutUser.avatarUrl())
+                        ))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -360,8 +389,12 @@ class TicketControllerTest {
     @DirtiesContext
     void updateTicket_whenInvalidIdAndTitleAndDescription_thenReturnApiErrorMessage() throws Exception {
         //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
         //WHEN
-        mockMvc.perform(put("/api/ticket/test-id")
+        mockMvc.perform(put("/api/ticket/test-id").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", ticketScoutUser.name())
+                                .claim("avatar_url", ticketScoutUser.avatarUrl())
+                        ))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
@@ -403,7 +436,10 @@ class TicketControllerTest {
         ticketRepository.insert(ticketToKeep);
 
         //WHEN
-        mockMvc.perform(delete("/api/ticket/{id}", ticketToDelete.id()))
+        mockMvc.perform(delete("/api/ticket/{id}", ticketToDelete.id()).with(oidcLogin().userInfoToken(token -> token
+                        .claim("login", ticketScoutUser.name())
+                        .claim("avatar_url", ticketScoutUser.avatarUrl())
+                )))
                 //THEN
                 .andExpect(status().isOk());
 

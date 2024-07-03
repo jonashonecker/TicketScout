@@ -19,4 +19,8 @@ public class UserService {
         }
         throw new UserAuthenticationException("Could not retrieve current user.");
     }
+
+    public String getUsername() {
+        return getCurrentUser().name();
+    }
 }
