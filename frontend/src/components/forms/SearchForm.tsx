@@ -27,7 +27,7 @@ export default function SearchForm({
       });
   }
 
-  const [searchText, setSearchTest] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>("");
 
   return (
     <Paper
@@ -39,7 +39,7 @@ export default function SearchForm({
         placeholder="Search your tickets"
         inputProps={{ "aria-label": "search TicketScout" }}
         value={searchText}
-        onChange={(event) => setSearchTest(event.target.value)}
+        onChange={(event) => setSearchText(event.target.value)}
       />
       <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
       <IconButton
