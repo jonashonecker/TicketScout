@@ -2,7 +2,6 @@ package com.github.jonashonecker.backend.error;
 
 import com.github.jonashonecker.backend.error.domain.ApiErrorResponse;
 import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
-import com.github.jonashonecker.backend.user.exception.UserAuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,15 +22,6 @@ public class GlobalExceptionHandler {
                         .map(error -> error.getField() + " (" + error.getDefaultMessage() + ")")
                         .collect(Collectors.joining(" and ")
                         )
-        );
-    }
-
-    @ExceptionHandler(UserAuthenticationException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ApiErrorResponse handleUserAuthenticationException(UserAuthenticationException ex) {
-
-        return new ApiErrorResponse(
-                "There is an issue with your user login. Please contact support."
         );
     }
 

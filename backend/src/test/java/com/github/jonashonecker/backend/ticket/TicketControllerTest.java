@@ -264,40 +264,6 @@ class TicketControllerTest {
     }
 
     @Test
-    @WithMockUser
-    @DirtiesContext
-    void createTicket_whenInvalidUser_thenReturnApiErrorMessage() throws Exception {
-        //GIVEN
-        mockWebServer.enqueue(new MockResponse()
-                .setBody("""
-                        {
-                          "data": [{
-                            "object": "embedding",
-                            "embedding": [0.1]
-                            }
-                          ]
-                        }
-                        """)
-                .addHeader("Content-Type", "application/json"));
-
-        //WHEN
-        mockMvc.perform(post("/api/ticket").with(oidcLogin().userInfoToken(token -> token
-                                .claim("login", "test-user")
-                                .claim("avatar_url", "avatar-url")
-                        ))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {
-                                  "title": "test-title",
-                                  "description": "test-description"
-                                }
-                                """))
-                //THEN
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.error").value("There is an issue with your user login. Please contact support."));
-    }
-
-    @Test
     void updateTicket_whenUnauthenticated_returnUnauthorized() throws Exception {
         //GIVEN
         //WHEN
