@@ -1,10 +1,8 @@
-package com.github.jonashonecker.backend.ticket.domain;
+package com.github.jonashonecker.backend.ticket.domain.ticket;
 
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("tickets")
-public record Ticket(
+public record TicketResponseDTO(
         String id,
         String projectName,
         String title,

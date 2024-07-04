@@ -1,6 +1,6 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.Ticket;
+import com.github.jonashonecker.backend.ticket.domain.ticket.Ticket;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

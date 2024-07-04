@@ -1,12 +1,12 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.NewTicketDTO;
-import com.github.jonashonecker.backend.ticket.domain.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.UpdateTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.*;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.github.jonashonecker.backend.ticket.utils.Utils.ticketToDtoMapper;
 
 @RestController
 @RequestMapping("/api/ticket")
@@ -18,18 +18,23 @@ public class TicketController {
     }
 
     @GetMapping
-    public List<Ticket> getAllTickets() {
-        return ticketService.getAllTickets();
+    public List<TicketResponseDTO> getAllTickets(@RequestParam(required = false) String searchText) {
+        List<Ticket> tickets = searchText == null ? ticketService.getAllTickets() : ticketService.getTicketsByVectorSearch(searchText);
+        return tickets.stream().map(ticketToDtoMapper).toList();
     }
 
     @PostMapping
-    public Ticket createTicket(@Valid @RequestBody NewTicketDTO newTicketDTO) {
-        return ticketService.createTicket(newTicketDTO);
+    public TicketResponseDTO createTicket(@Valid @RequestBody TicketRequestDTO ticketRequestDTO) {
+        Ticket ticket = ticketService.createTicket(ticketRequestDTO);
+        return ticketToDtoMapper.apply(ticket);
     }
 
-    @PutMapping
-    public Ticket updateTicket(@Valid @RequestBody UpdateTicketDTO updateTicketDTO) {
-        return ticketService.updateTicket(updateTicketDTO);
+    @PutMapping("/{id}")
+    public TicketResponseDTO updateTicket(
+            @Valid @RequestBody TicketRequestDTO ticketRequestDTO,
+            @PathVariable String id) {
+        Ticket ticket = ticketService.updateTicket(ticketRequestDTO, id);
+        return ticketToDtoMapper.apply(ticket);
     }
 
     @DeleteMapping("/{id}")

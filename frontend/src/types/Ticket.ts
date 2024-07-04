@@ -11,11 +11,7 @@ export type Ticket = {
   author: User;
 };
 
-export type NewTicket = {
+export type TicketRequestDTO = {
   title: string;
   description: string;
-};
-
-export type UpdateTicket = NewTicket & {
-  id: string;
 };

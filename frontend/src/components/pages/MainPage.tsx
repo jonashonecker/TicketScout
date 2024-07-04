@@ -38,7 +38,10 @@ export default function MainPage({
       <MainNavBar user={user} setSidepanelConfig={setSidepanelConfig} />
       <Container fixed sx={{ p: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
-          <SearchForm setSearchResults={setSearchResults} />
+          <SearchForm
+            setSearchResults={setSearchResults}
+            setSnackbarConfig={setSnackbarConfig}
+          />
         </Box>
         <TicketCardsGrid
           searchResults={searchResults}

@@ -1,9 +1,6 @@
 package com.github.jonashonecker.backend.ticket;
 
-import com.github.jonashonecker.backend.ticket.domain.NewTicketDTO;
-import com.github.jonashonecker.backend.ticket.domain.Status;
-import com.github.jonashonecker.backend.ticket.domain.Ticket;
-import com.github.jonashonecker.backend.ticket.domain.UpdateTicketDTO;
+import com.github.jonashonecker.backend.ticket.domain.ticket.*;
 import com.github.jonashonecker.backend.ticket.exception.NoSuchTicketException;
 import com.github.jonashonecker.backend.user.UserService;
 import com.github.jonashonecker.backend.user.domain.TicketScoutUser;
@@ -18,10 +15,12 @@ import static org.mockito.Mockito.*;
 class TicketServiceTest {
 
     private final TicketRepository ticketRepository = mock();
+    private final TicketRepositoryVectorSearch ticketRepositoryVectorSearch = mock();
     private final IdService idService = mock();
     private final UserService userService = mock();
+    private final EmbeddingService embeddingService = mock();
 
-    private final TicketService ticketService = new TicketService(ticketRepository, idService, userService);
+    private final TicketService ticketService = new TicketService(ticketRepository, idService, userService, embeddingService, ticketRepositoryVectorSearch);
 
     @Test
     void getAllTickets_whenRepositoryEmpty_returnEmptyList() {
@@ -58,7 +57,8 @@ class TicketServiceTest {
                 "test-title",
                 "test-description",
                 Status.OPEN,
-                new TicketScoutUser("test-name", "test-avatarUrl")
+                new TicketScoutUser("test-name", "test-avatarUrl"),
+                List.of(1.2D)
         );
 
         when(ticketRepository.findById(id)).thenReturn(Optional.of(expected));
@@ -80,7 +80,8 @@ class TicketServiceTest {
                 "test-title",
                 "test-description",
                 Status.IN_PROGRESS,
-                ticketScoutUser
+                ticketScoutUser,
+                List.of(1.2D)
         );
 
         when(ticketRepository.findAll()).thenReturn(List.of(ticket));
@@ -97,8 +98,9 @@ class TicketServiceTest {
         //GIVEN
         String defaultProject = "Default Project";
         Status defaultStatus = Status.OPEN;
+        List<Double> embedding = List.of(1.5D);
         TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
-        NewTicketDTO newTicketDTO = new NewTicketDTO(
+        TicketRequestDTO ticketRequestDTO = new TicketRequestDTO(
                 "test-title",
                 "test-description"
         );
@@ -109,20 +111,23 @@ class TicketServiceTest {
                 "test-title",
                 "test-description",
                 defaultStatus,
-                ticketScoutUser
+                ticketScoutUser,
+                embedding
         );
 
         when(idService.getUUID()).thenReturn("1");
         when(userService.getCurrentUser()).thenReturn(ticketScoutUser);
         when(ticketRepository.insert(any(Ticket.class))).thenReturn(expected);
+        when(embeddingService.getEmbeddingVectorForTicket(ticketRequestDTO)).thenReturn(embedding);
 
         //WHEN
-        Ticket actual = ticketService.createTicket(newTicketDTO);
+        Ticket actual = ticketService.createTicket(ticketRequestDTO);
 
         //THEN
         verify(ticketRepository, times(1)).insert(expected);
         verify(idService, times(1)).getUUID();
         verify(userService, times(1)).getCurrentUser();
+        verify(embeddingService, times(1)).getEmbeddingVectorForTicket(ticketRequestDTO);
         assertEquals(expected, actual);
     }
 
@@ -131,14 +136,16 @@ class TicketServiceTest {
         //GIVEN
         String id = "test-id";
         String description = "test-description";
-        UpdateTicketDTO updateTicketDTO = new UpdateTicketDTO(id, "new-updated-title", description);
+        List<Double> embedding = List.of(1.5D);
+        TicketRequestDTO ticketRequestDTO = new TicketRequestDTO( "new-updated-title", description);
         Ticket ticketInDb = new Ticket(
                 id,
                 "test-projectName",
                 "test-title",
                 description,
                 Status.OPEN,
-                new TicketScoutUser("test-name", "test-avatarUrl")
+                new TicketScoutUser("test-name", "test-avatarUrl"),
+                embedding
         );
         Ticket expected = new Ticket(
                 id,
@@ -146,17 +153,20 @@ class TicketServiceTest {
                 "new-updated-title",
                 ticketInDb.description(),
                 ticketInDb.status(),
-                ticketInDb.author()
+                ticketInDb.author(),
+                embedding
         );
         when(ticketRepository.findById(id)).thenReturn(Optional.of(ticketInDb));
         when(ticketRepository.save(expected)).thenReturn(expected);
+        when(embeddingService.getEmbeddingVectorForTicket(ticketRequestDTO)).thenReturn(embedding);
 
         //WHEN
-        Ticket actual = ticketService.updateTicket(updateTicketDTO);
+        Ticket actual = ticketService.updateTicket(ticketRequestDTO, id);
 
         //THEN
         verify(ticketRepository, times(1)).save(expected);
         verify(ticketRepository, times(1)).findById(id);
+        verify(embeddingService, times(1)).getEmbeddingVectorForTicket(ticketRequestDTO);
         assertEquals(expected, actual);
     }
 
@@ -183,7 +193,8 @@ class TicketServiceTest {
                 "test-title",
                 "test-description",
                 Status.OPEN,
-                new TicketScoutUser("test-name", "test-avatarUrl")
+                new TicketScoutUser("test-name", "test-avatarUrl"),
+                List.of(1.2D)
         );
         when(ticketRepository.findById(id)).thenReturn(Optional.of(ticket));
 
@@ -194,4 +205,23 @@ class TicketServiceTest {
         verify(ticketRepository, times(1)).findById(id);
         verify(ticketRepository, times(1)).delete(ticket);
     }
+
+    @Test
+    void getTicketsByVectorSearch_withValidSearchText_returnsMatchingTickets() {
+        // GIVEN
+        String searchText = "test search";
+        List<Double> embedding = List.of(1.0, 2.0);
+        Ticket expectedTicket = new Ticket("1", "Default Project", "Title", "Description", Status.OPEN, new TicketScoutUser("name", "avatarUrl"), embedding);
+        when(embeddingService.getEmbeddingVectorForSearchText(searchText)).thenReturn(embedding);
+        when(ticketRepositoryVectorSearch.findTicketsByVector(embedding)).thenReturn(List.of(expectedTicket));
+
+        // WHEN
+        List<Ticket> actualTickets = ticketService.getTicketsByVectorSearch(searchText);
+
+        // THEN
+        assertEquals(List.of(expectedTicket), actualTickets);
+        verify(embeddingService, times(1)).getEmbeddingVectorForSearchText(searchText);
+        verify(ticketRepositoryVectorSearch, times(1)).findTicketsByVector(embedding);
+    }
+
 }

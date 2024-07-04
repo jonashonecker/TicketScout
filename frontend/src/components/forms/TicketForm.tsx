@@ -80,12 +80,12 @@ export default function TicketForm({
   function update() {
     const [isTitleError, isDescriptionError] = validateTitleAndDescription();
 
+    if (sidePanelConfig.formType !== "UpdateTicket") {
+      return;
+    }
+
     if (!isTitleError && !isDescriptionError) {
-      updateTicket({
-        id:
-          sidePanelConfig.formType == "UpdateTicket"
-            ? sidePanelConfig.ticket.id
-            : "",
+      updateTicket(sidePanelConfig.ticket.id, {
         title: title,
         description: description,
       })
