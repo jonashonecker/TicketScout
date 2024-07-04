@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
@@ -19,12 +20,13 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.anyOf;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -411,5 +413,220 @@ class TicketControllerTest {
 
         assertFalse(ticketRepository.findById(ticketToDelete.id()).isPresent());
         assertTrue(ticketRepository.findById(ticketToKeep.id()).isPresent());
+    }
+
+    @Test
+    @WithMockUser
+    void getAllTickets_when101thRequestMade_thenReturnApiErrorMessage() throws Exception {
+        //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
+        IntStream.rangeClosed(1, 100)
+                .boxed()
+                .sorted(Collections.reverseOrder())
+                .forEach(counter -> {
+                    try {
+                        mockMvc.perform(get("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                                        .claim("login", ticketScoutUser.name())
+                                        .claim("avatar_url", ticketScoutUser.avatarUrl())
+                                )))
+                                .andExpect(status().isOk())
+                                .andExpect(header().longValue("X-Rate-Limit-Remaining", counter - 1));
+                    } catch (Exception e) {
+                        fail(e.getMessage());
+                    }
+                });
+
+        //WHEN
+        mockMvc.perform(get("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                        .claim("login", ticketScoutUser.name())
+                        .claim("avatar_url", ticketScoutUser.avatarUrl())
+                )))
+                //THEN
+                .andExpect(status().is(HttpStatus.TOO_MANY_REQUESTS.value()))
+                .andExpect(content().json("""
+                        {
+                          "error": "Too Many Requests, you have exhausted your API Request Quota"
+                        }
+                        """)
+                );
+    }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void createTicket_when101thRequestMade_thenReturnApiErrorMessage() throws Exception {
+        //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
+        IntStream.rangeClosed(1, 100)
+                .boxed()
+                .sorted(Collections.reverseOrder())
+                .forEach(counter -> {
+                    try {
+                        mockMvc.perform(get("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                                        .claim("login", ticketScoutUser.name())
+                                        .claim("avatar_url", ticketScoutUser.avatarUrl())
+                                )))
+                                .andExpect(status().isOk())
+                                .andExpect(header().longValue("X-Rate-Limit-Remaining", counter - 1));
+                    } catch (Exception e) {
+                        fail(e.getMessage());
+                    }
+                });
+
+        mockWebServer.enqueue(new MockResponse()
+                .setBody("""
+                        {
+                          "data": [{
+                            "object": "embedding",
+                            "embedding": [0.1]
+                            }
+                          ]
+                        }
+                        """)
+                .addHeader("Content-Type", "application/json"));
+
+        //WHEN
+        mockMvc.perform(post("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", ticketScoutUser.name())
+                                .claim("avatar_url", ticketScoutUser.avatarUrl())
+                        ))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "",
+                                  "description": ""
+                                }
+                                """))
+                //THEN
+                .andExpect(status().is(HttpStatus.TOO_MANY_REQUESTS.value()))
+                .andExpect(content().json("""
+                        {
+                          "error": "Too Many Requests, you have exhausted your API Request Quota"
+                        }
+                        """)
+                );
+    }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void updateTicket_when101thRequestMade_thenReturnApiErrorMessage() throws Exception {
+        //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
+        IntStream.rangeClosed(1, 100)
+                .boxed()
+                .sorted(Collections.reverseOrder())
+                .forEach(counter -> {
+                    try {
+                        mockMvc.perform(get("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                                        .claim("login", ticketScoutUser.name())
+                                        .claim("avatar_url", ticketScoutUser.avatarUrl())
+                                )))
+                                .andExpect(status().isOk())
+                                .andExpect(header().longValue("X-Rate-Limit-Remaining", counter - 1));
+                    } catch (Exception e) {
+                        fail(e.getMessage());
+                    }
+                });
+        ticketRepository.insert(new Ticket(
+                "test-id",
+                "test-projectName",
+                "test-title",
+                "test-description",
+                Status.OPEN,
+                new TicketScoutUser("test-name", "test-avatarUrl"),
+                List.of(1.2D, 3.4D)
+        ));
+
+        mockWebServer.enqueue(new MockResponse()
+                .setBody("""
+                        {
+                          "data": [{
+                            "object": "embedding",
+                            "embedding": [0.1]
+                            }
+                          ]
+                        }
+                        """)
+                .addHeader("Content-Type", "application/json"));
+
+        //WHEN
+        mockMvc.perform(put("/api/ticket/test-id").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", ticketScoutUser.name())
+                                .claim("avatar_url", ticketScoutUser.avatarUrl())
+                        ))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "title": "updated-title",
+                                  "description": "updated-description"
+                                }
+                                """))
+                //THEN
+                .andExpect(status().is(HttpStatus.TOO_MANY_REQUESTS.value()))
+                .andExpect(content().json("""
+                        {
+                          "error": "Too Many Requests, you have exhausted your API Request Quota"
+                        }
+                        """)
+                );
+    }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void deleteTicket_when101thRequestMade_thenReturnApiErrorMessage() throws Exception {
+        //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
+        IntStream.rangeClosed(1, 100)
+                .boxed()
+                .sorted(Collections.reverseOrder())
+                .forEach(counter -> {
+                    try {
+                        mockMvc.perform(get("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                                        .claim("login", ticketScoutUser.name())
+                                        .claim("avatar_url", ticketScoutUser.avatarUrl())
+                                )))
+                                .andExpect(status().isOk())
+                                .andExpect(header().longValue("X-Rate-Limit-Remaining", counter - 1));
+                    } catch (Exception e) {
+                        fail(e.getMessage());
+                    }
+                });
+        ticketRepository.insert(new Ticket(
+                "test-id",
+                "test-projectName",
+                "test-title",
+                "test-description",
+                Status.OPEN,
+                new TicketScoutUser("test-name", "test-avatarUrl"),
+                List.of(1.2D, 3.4D)
+        ));
+
+        mockWebServer.enqueue(new MockResponse()
+                .setBody("""
+                        {
+                          "data": [{
+                            "object": "embedding",
+                            "embedding": [0.1]
+                            }
+                          ]
+                        }
+                        """)
+                .addHeader("Content-Type", "application/json"));
+
+        //WHEN
+        mockMvc.perform(delete("/api/ticket/test-id").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", ticketScoutUser.name())
+                                .claim("avatar_url", ticketScoutUser.avatarUrl())
+                        )))
+                //THEN
+                .andExpect(status().is(HttpStatus.TOO_MANY_REQUESTS.value()))
+                .andExpect(content().json("""
+                        {
+                          "error": "Too Many Requests, you have exhausted your API Request Quota"
+                        }
+                        """)
+                );
     }
 }
