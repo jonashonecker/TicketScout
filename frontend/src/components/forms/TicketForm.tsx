@@ -134,7 +134,12 @@ export default function TicketForm({
         title={title}
       />
       <Stack direction="row" sx={{ mt: 2, mb: 1 }}>
-        <TicketStatusChip ticketStatus={"OPEN"} />
+        {sidePanelConfig.formType == "NewTicket" && (
+          <TicketStatusChip ticketStatus={"OPEN"} />
+        )}
+        {sidePanelConfig.formType == "UpdateTicket" && (
+          <TicketStatusChip ticketStatus={sidePanelConfig.ticket.status} />
+        )}
       </Stack>
       <TicketDescriptionInput
         user={user}
