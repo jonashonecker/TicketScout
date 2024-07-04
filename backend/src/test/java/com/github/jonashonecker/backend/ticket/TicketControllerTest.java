@@ -75,6 +75,7 @@ class TicketControllerTest {
 
     @Test
     @WithMockUser
+    @DirtiesContext
     void getAllTickets_whenRepositoryEmpty_returnEmptyBody() throws Exception {
         //GIVEN
         TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
@@ -193,7 +194,7 @@ class TicketControllerTest {
     @Test
     @WithMockUser
     @DirtiesContext
-    void createTicket_whenInvalidTicketTitle_thenReturnApiErrorMessage() throws Exception {
+    void createTicket_whenEmptyTitle_thenReturnApiErrorMessage() throws Exception {
         //GIVEN
         TicketScoutUser ticketScoutUser = new TicketScoutUser("testUser", "testAvatarUrl");
 
@@ -217,7 +218,32 @@ class TicketControllerTest {
     @Test
     @WithMockUser
     @DirtiesContext
-    void createTicket_whenInvalidDescription_thenReturnApiErrorMessage() throws Exception {
+    void createTicket_whenTooLongTitle_thenReturnApiErrorMessage() throws Exception {
+        //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("testUser", "testAvatarUrl");
+        String tooLongTitle = "a".repeat(257);
+
+        //WHEN
+        mockMvc.perform(post("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", ticketScoutUser.name())
+                                .claim("avatar_url", ticketScoutUser.avatarUrl())
+                        ))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(String.format("""
+                                {
+                                  "title": "%s",
+                                  "description": "test-description"
+                                }
+                                """, tooLongTitle)))
+                //THEN
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Input validation failed for title (Title must not exceed 256 characters)"));
+    }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void createTicket_whenEmptyDescription_thenReturnApiErrorMessage() throws Exception {
         //GIVEN
         TicketScoutUser ticketScoutUser = new TicketScoutUser("testUser", "testAvatarUrl");
 
@@ -241,7 +267,32 @@ class TicketControllerTest {
     @Test
     @WithMockUser
     @DirtiesContext
-    void createTicket_whenInvalidTitleAndDescription_thenReturnApiErrorMessage() throws Exception {
+    void createTicket_whenTooLongDescription_thenReturnApiErrorMessage() throws Exception {
+        //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("testUser", "testAvatarUrl");
+        String tooLongDescription = "a".repeat(20001);
+
+        //WHEN
+        mockMvc.perform(post("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", ticketScoutUser.name())
+                                .claim("avatar_url", ticketScoutUser.avatarUrl())
+                        ))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(String.format("""
+                                {
+                                  "title": "test-title",
+                                  "description": "%s"
+                                }
+                                """, tooLongDescription)))
+                //THEN
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Input validation failed for description (Description must not exceed 20000 characters)"));
+    }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void createTicket_whenEmptyTitleAndDescription_thenReturnApiErrorMessage() throws Exception {
         //GIVEN
         TicketScoutUser ticketScoutUser = new TicketScoutUser("testUser", "testAvatarUrl");
 
@@ -262,6 +313,35 @@ class TicketControllerTest {
                 .andExpect(jsonPath("$.error", anyOf(
                         containsString("Input validation failed for title (Title must not be empty) and description (Description must not be empty)"),
                         containsString("Input validation failed for description (Description must not be empty) and title (Title must not be empty)")
+                )));
+    }
+
+    @Test
+    @WithMockUser
+    @DirtiesContext
+    void createTicket_whenTooLongTitleAndDescription_thenReturnApiErrorMessage() throws Exception {
+        //GIVEN
+        TicketScoutUser ticketScoutUser = new TicketScoutUser("testUser", "testAvatarUrl");
+        String tooLongTitle = "a".repeat(257);
+        String tooLongDescription = "a".repeat(20001);
+
+        //WHEN
+        mockMvc.perform(post("/api/ticket").with(oidcLogin().userInfoToken(token -> token
+                                .claim("login", ticketScoutUser.name())
+                                .claim("avatar_url", ticketScoutUser.avatarUrl())
+                        ))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(String.format("""
+                                {
+                                  "title": "%s",
+                                  "description": "%s"
+                                }
+                                """, tooLongTitle, tooLongDescription)))
+                //THEN
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error", anyOf(
+                        containsString("Input validation failed for title (Title must not exceed 256 characters) and description (Description must not exceed 20000 characters)"),
+                        containsString("Input validation failed for description (Description must not exceed 20000 characters) and title (Title must not exceed 256 characters)")
                 )));
     }
 
@@ -417,6 +497,7 @@ class TicketControllerTest {
 
     @Test
     @WithMockUser
+    @DirtiesContext
     void getAllTickets_when101thRequestMade_thenReturnApiErrorMessage() throws Exception {
         //GIVEN
         TicketScoutUser ticketScoutUser = new TicketScoutUser("test-name", "test-avatarUrl");
@@ -617,9 +698,9 @@ class TicketControllerTest {
 
         //WHEN
         mockMvc.perform(delete("/api/ticket/test-id").with(oidcLogin().userInfoToken(token -> token
-                                .claim("login", ticketScoutUser.name())
-                                .claim("avatar_url", ticketScoutUser.avatarUrl())
-                        )))
+                        .claim("login", ticketScoutUser.name())
+                        .claim("avatar_url", ticketScoutUser.avatarUrl())
+                )))
                 //THEN
                 .andExpect(status().is(HttpStatus.TOO_MANY_REQUESTS.value()))
                 .andExpect(content().json("""
