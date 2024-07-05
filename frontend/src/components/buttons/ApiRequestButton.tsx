@@ -1,24 +1,31 @@
 import { Box, Button, CircularProgress } from "@mui/material";
 
-type SaveButtonProps = {
+type ApiRequestButtonProps = {
   onClick: () => void;
   pendingRequest: boolean;
+  color: "primary" | "error";
+  label: "Save" | "Update" | "Delete";
 };
 
-export default function SaveButton({
+export default function ApiRequestButton({
   onClick,
   pendingRequest,
-}: Readonly<SaveButtonProps>) {
+  color,
+  label,
+}: Readonly<ApiRequestButtonProps>) {
   return (
     <Box sx={{ position: "relative" }}>
       <Button
         onClick={onClick}
+        color={color}
         variant="contained"
         size={"small"}
         disabled={pendingRequest}
-        sx={{ fontWeight: "bold" }}
+        sx={{
+          fontWeight: "bold",
+        }}
       >
-        Save
+        {label}
       </Button>
       {pendingRequest && (
         <CircularProgress

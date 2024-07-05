@@ -4,14 +4,13 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../types/User.ts";
 import { SnackbarConfig, SidepanelConfig } from "../../types/Config.ts";
 import CancelButton from "../buttons/CancelButton.tsx";
-import SaveButton from "../buttons/SaveButton.tsx";
 import TicketTitleInput from "../inputs/TicketTitleInput.tsx";
 import TicketDescriptionInput from "../inputs/TicketDescriptionInput.tsx";
 import { createNewTicket, updateTicket } from "../utils/ApiRequests.tsx";
 import { checkIfHtmlContainsText } from "../utils/Validation.tsx";
-import UpdateButton from "../buttons/UpdateButton.tsx";
 import { Ticket } from "../../types/Ticket.ts";
 import DeleteButton from "../buttons/DeleteButton.tsx";
+import ApiRequestButton from "../buttons/ApiRequestButton.tsx";
 
 type TicketFormProps = {
   user: User | null | undefined;
@@ -170,10 +169,20 @@ export default function TicketForm({
         )}
         <CancelButton onClick={cancel} />
         {sidePanelConfig.formType == "NewTicket" && (
-          <SaveButton onClick={save} pendingRequest={pendingRequest} />
+          <ApiRequestButton
+            onClick={save}
+            pendingRequest={pendingRequest}
+            color={"primary"}
+            label={"Save"}
+          />
         )}
         {sidePanelConfig.formType == "UpdateTicket" && (
-          <UpdateButton onClick={update} pendingRequest={pendingRequest} />
+          <ApiRequestButton
+            onClick={update}
+            pendingRequest={pendingRequest}
+            color={"primary"}
+            label={"Update"}
+          />
         )}
       </Stack>
     </>

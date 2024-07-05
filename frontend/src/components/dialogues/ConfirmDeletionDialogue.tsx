@@ -10,7 +10,7 @@ import { Dispatch, SetStateAction } from "react";
 import { SnackbarConfig, SidepanelConfig } from "../../types/Config.ts";
 import { deleteTicket } from "../utils/ApiRequests.tsx";
 import { Ticket } from "../../types/Ticket.ts";
-import ConfirmDeleteButton from "../buttons/ConfirmDeleteButton.tsx";
+import ApiRequestButton from "../buttons/ApiRequestButton.tsx";
 
 type ConfirmDeletionDialogueProps = {
   confirmDeletion: boolean;
@@ -86,9 +86,11 @@ export default function ConfirmDeletionDialogue({
       </DialogContent>
       <DialogActions>
         <CancelButton onClick={handleClose} />
-        <ConfirmDeleteButton
+        <ApiRequestButton
           onClick={handleDelete}
           pendingRequest={pendingRequest}
+          color={"error"}
+          label={"Delete"}
         />
       </DialogActions>
     </Dialog>
