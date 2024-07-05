@@ -1,5 +1,4 @@
 import { AppBar, Box, Fade, LinearProgress, Toolbar } from "@mui/material";
-import { styled } from "@mui/system";
 import Logo from "../logo/Logo.tsx";
 import UserMenuButton from "../buttons/UserMenuButton.tsx";
 import MainMenuButton from "../buttons/MainMenuButton.tsx";
@@ -13,17 +12,13 @@ type NavBarProps = {
   loadingTickets: boolean;
 };
 
-const StyledAppBar = styled(AppBar)({
-  boxShadow: "none",
-});
-
 export default function MainNavBar({
   user,
   setSidepanelConfig,
   loadingTickets,
 }: Readonly<NavBarProps>) {
   return (
-    <StyledAppBar position={"sticky"}>
+    <AppBar elevation={0} position={"sticky"}>
       <Toolbar>
         {user && <MainMenuButton setSidepanelConfig={setSidepanelConfig} />}
         <Box sx={{ flexGrow: 1 }}>
@@ -38,6 +33,6 @@ export default function MainNavBar({
           </Box>
         </Fade>
       )}
-    </StyledAppBar>
+    </AppBar>
   );
 }
