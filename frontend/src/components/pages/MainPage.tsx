@@ -32,7 +32,6 @@ export default function MainPage({
     message: "Initial value",
   });
   const [confirmDeletion, setConfirmDeletion] = useState(false);
-  const [loadingTickets, setLoadingTickets] = useState(false);
   const [pendingRequest, setPendingRequest] = useState<boolean>(false);
 
   return (
@@ -40,14 +39,14 @@ export default function MainPage({
       <MainNavBar
         user={user}
         setSidepanelConfig={setSidepanelConfig}
-        loadingTickets={loadingTickets}
+        pendingRequest={pendingRequest}
       />
       <Container fixed sx={{ p: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <SearchForm
             setSearchResults={setSearchResults}
             setSnackbarConfig={setSnackbarConfig}
-            setLoadingTickets={setLoadingTickets}
+            setPendingRequest={setPendingRequest}
           />
         </Box>
         <TicketCardsGrid

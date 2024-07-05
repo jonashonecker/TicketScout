@@ -9,13 +9,13 @@ import { SidepanelConfig } from "../../types/Config.ts";
 type NavBarProps = {
   user: User | null | undefined;
   setSidepanelConfig: Dispatch<SetStateAction<SidepanelConfig>>;
-  loadingTickets: boolean;
+  pendingRequest: boolean;
 };
 
 export default function MainNavBar({
   user,
   setSidepanelConfig,
-  loadingTickets,
+  pendingRequest,
 }: Readonly<NavBarProps>) {
   return (
     <AppBar elevation={0} position={"sticky"}>
@@ -26,8 +26,8 @@ export default function MainNavBar({
         </Box>
         {user && <UserMenuButton user={user} />}
       </Toolbar>
-      {loadingTickets && (
-        <Fade in={loadingTickets}>
+      {pendingRequest && (
+        <Fade in={pendingRequest}>
           <Box sx={{ position: "absolute", bottom: "-4px", width: "100%" }}>
             <LinearProgress />
           </Box>

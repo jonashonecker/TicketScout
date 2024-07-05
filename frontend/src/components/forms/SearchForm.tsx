@@ -8,24 +8,24 @@ import { SnackbarConfig } from "../../types/Config.ts";
 type SearchFormProps = {
   setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
   setSnackbarConfig: Dispatch<SetStateAction<SnackbarConfig>>;
-  setLoadingTickets: Dispatch<SetStateAction<boolean>>;
+  setPendingRequest: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function SearchForm({
   setSearchResults,
   setSnackbarConfig,
-  setLoadingTickets,
+  setPendingRequest,
 }: Readonly<SearchFormProps>) {
   function searchTickets(event: FormEvent) {
     event.preventDefault();
-    setLoadingTickets(true);
+    setPendingRequest(true);
     getAllTickets(searchText)
       .then((response) => {
-        setLoadingTickets(false);
+        setPendingRequest(false);
         setSearchResults(response.data);
       })
       .catch((error) => {
-        setLoadingTickets(false);
+        setPendingRequest(false);
         setSnackbarConfig({
           open: true,
           severity: "error",
