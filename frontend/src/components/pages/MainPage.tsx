@@ -32,15 +32,21 @@ export default function MainPage({
     message: "Initial value",
   });
   const [confirmDeletion, setConfirmDeletion] = useState(false);
+  const [loadingTickets, setLoadingTickets] = useState(false);
 
   return (
     <>
-      <MainNavBar user={user} setSidepanelConfig={setSidepanelConfig} />
+      <MainNavBar
+        user={user}
+        setSidepanelConfig={setSidepanelConfig}
+        loadingTickets={loadingTickets}
+      />
       <Container fixed sx={{ p: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <SearchForm
             setSearchResults={setSearchResults}
             setSnackbarConfig={setSnackbarConfig}
+            setLoadingTickets={setLoadingTickets}
           />
         </Box>
         <TicketCardsGrid
