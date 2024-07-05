@@ -33,6 +33,7 @@ export default function MainPage({
   });
   const [confirmDeletion, setConfirmDeletion] = useState(false);
   const [loadingTickets, setLoadingTickets] = useState(false);
+  const [pendingRequest, setPendingRequest] = useState<boolean>(false);
 
   return (
     <>
@@ -67,6 +68,8 @@ export default function MainPage({
             searchResults={searchResults}
             setSearchResults={setSearchResults}
             setConfirmDeletion={setConfirmDeletion}
+            pendingRequest={pendingRequest}
+            setPendingRequest={setPendingRequest}
           />
         </Container>
       </Sidepanel>
@@ -82,6 +85,8 @@ export default function MainPage({
         searchResults={searchResults}
         setSearchResults={setSearchResults}
         setSnackbarConfig={setSnackbarConfig}
+        pendingRequest={pendingRequest}
+        setPendingRequest={setPendingRequest}
       />
     </>
   );

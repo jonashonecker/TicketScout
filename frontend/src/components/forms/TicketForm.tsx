@@ -21,6 +21,8 @@ type TicketFormProps = {
   searchResults: Ticket[] | undefined;
   setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
   setConfirmDeletion: Dispatch<SetStateAction<boolean>>;
+  pendingRequest: boolean;
+  setPendingRequest: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function TicketForm({
@@ -31,6 +33,8 @@ export default function TicketForm({
   searchResults,
   setSearchResults,
   setConfirmDeletion,
+  pendingRequest,
+  setPendingRequest,
 }: Readonly<TicketFormProps>) {
   const [title, setTitle] = useState<string>("");
   const [titleError, setTitleError] = useState<boolean>(false);
@@ -58,8 +62,10 @@ export default function TicketForm({
     const [isTitleError, isDescriptionError] = validateTitleAndDescription();
 
     if (!isTitleError && !isDescriptionError) {
+      setPendingRequest(true);
       createNewTicket({ title: title, description: description })
         .then(() => {
+          setPendingRequest(false);
           setSnackbarConfig({
             open: true,
             severity: "success",
@@ -68,6 +74,7 @@ export default function TicketForm({
           setSidepanelConfig({ ...sidePanelConfig, open: false });
         })
         .catch((error) => {
+          setPendingRequest(false);
           setSnackbarConfig({
             open: true,
             severity: "error",
@@ -85,11 +92,13 @@ export default function TicketForm({
     }
 
     if (!isTitleError && !isDescriptionError) {
+      setPendingRequest(true);
       updateTicket(sidePanelConfig.ticket.id, {
         title: title,
         description: description,
       })
         .then((response) => {
+          setPendingRequest(false);
           setSearchResults(
             searchResults?.map((ticket) => {
               if (ticket.id === response.data.id) {
@@ -107,6 +116,7 @@ export default function TicketForm({
           setSidepanelConfig({ ...sidePanelConfig, open: false });
         })
         .catch((error) => {
+          setPendingRequest(false);
           setSnackbarConfig({
             open: true,
             severity: "error",
@@ -160,10 +170,10 @@ export default function TicketForm({
         )}
         <CancelButton onClick={cancel} />
         {sidePanelConfig.formType == "NewTicket" && (
-          <SaveButton onClick={save} />
+          <SaveButton onClick={save} pendingRequest={pendingRequest} />
         )}
         {sidePanelConfig.formType == "UpdateTicket" && (
-          <UpdateButton onClick={update} />
+          <UpdateButton onClick={update} pendingRequest={pendingRequest} />
         )}
       </Stack>
     </>

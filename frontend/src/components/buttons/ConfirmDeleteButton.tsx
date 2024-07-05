@@ -1,24 +1,27 @@
 import { Box, Button, CircularProgress } from "@mui/material";
 
-type SaveButtonProps = {
+type DeleteButtonProps = {
   onClick: () => void;
   pendingRequest: boolean;
 };
 
-export default function SaveButton({
+export default function ConfirmDeleteButton({
   onClick,
   pendingRequest,
-}: Readonly<SaveButtonProps>) {
+}: Readonly<DeleteButtonProps>) {
   return (
     <Box sx={{ position: "relative" }}>
       <Button
         onClick={onClick}
+        color={"error"}
         variant="contained"
         size={"small"}
         disabled={pendingRequest}
-        sx={{ fontWeight: "bold" }}
+        sx={{
+          fontWeight: "bold",
+        }}
       >
-        Save
+        Delete
       </Button>
       {pendingRequest && (
         <CircularProgress

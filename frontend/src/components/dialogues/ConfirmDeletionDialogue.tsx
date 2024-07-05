@@ -7,10 +7,10 @@ import {
 } from "@mui/material";
 import CancelButton from "../buttons/CancelButton.tsx";
 import { Dispatch, SetStateAction } from "react";
-import DeleteButton from "../buttons/DeleteButton.tsx";
 import { SnackbarConfig, SidepanelConfig } from "../../types/Config.ts";
 import { deleteTicket } from "../utils/ApiRequests.tsx";
 import { Ticket } from "../../types/Ticket.ts";
+import ConfirmDeleteButton from "../buttons/ConfirmDeleteButton.tsx";
 
 type ConfirmDeletionDialogueProps = {
   confirmDeletion: boolean;
@@ -20,6 +20,8 @@ type ConfirmDeletionDialogueProps = {
   searchResults: Ticket[] | undefined;
   setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
   setSnackbarConfig: Dispatch<SetStateAction<SnackbarConfig>>;
+  pendingRequest: boolean;
+  setPendingRequest: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function ConfirmDeletionDialogue({
@@ -30,14 +32,18 @@ export default function ConfirmDeletionDialogue({
   searchResults,
   setSearchResults,
   setSnackbarConfig,
+  pendingRequest,
+  setPendingRequest,
 }: Readonly<ConfirmDeletionDialogueProps>) {
   if (sidePanelConfig.formType !== "UpdateTicket") {
     return;
   }
 
   const handleDelete = () => {
+    setPendingRequest(true);
     deleteTicket(sidePanelConfig.ticket.id)
       .then(() => {
+        setPendingRequest(false);
         setSearchResults(
           searchResults?.filter((ticket) => {
             return ticket.id !== sidePanelConfig.ticket.id;
@@ -52,6 +58,7 @@ export default function ConfirmDeletionDialogue({
         setSidepanelConfig({ ...sidePanelConfig, open: false });
       })
       .catch((error) => {
+        setPendingRequest(false);
         setSnackbarConfig({
           open: true,
           severity: "error",
@@ -79,7 +86,10 @@ export default function ConfirmDeletionDialogue({
       </DialogContent>
       <DialogActions>
         <CancelButton onClick={handleClose} />
-        <DeleteButton onClick={handleDelete} />
+        <ConfirmDeleteButton
+          onClick={handleDelete}
+          pendingRequest={pendingRequest}
+        />
       </DialogActions>
     </Dialog>
   );
