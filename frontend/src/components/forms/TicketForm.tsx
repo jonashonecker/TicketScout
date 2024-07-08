@@ -4,14 +4,13 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../types/User.ts";
 import { SnackbarConfig, SidepanelConfig } from "../../types/Config.ts";
 import CancelButton from "../buttons/CancelButton.tsx";
-import SaveButton from "../buttons/SaveButton.tsx";
 import TicketTitleInput from "../inputs/TicketTitleInput.tsx";
 import TicketDescriptionInput from "../inputs/TicketDescriptionInput.tsx";
 import { createNewTicket, updateTicket } from "../utils/ApiRequests.tsx";
 import { checkIfHtmlContainsText } from "../utils/Validation.tsx";
-import UpdateButton from "../buttons/UpdateButton.tsx";
 import { Ticket } from "../../types/Ticket.ts";
 import DeleteButton from "../buttons/DeleteButton.tsx";
+import ApiRequestButton from "../buttons/ApiRequestButton.tsx";
 
 type TicketFormProps = {
   user: User | null | undefined;
@@ -21,6 +20,8 @@ type TicketFormProps = {
   searchResults: Ticket[] | undefined;
   setSearchResults: Dispatch<SetStateAction<Ticket[] | undefined>>;
   setConfirmDeletion: Dispatch<SetStateAction<boolean>>;
+  pendingRequest: boolean;
+  setPendingRequest: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function TicketForm({
@@ -31,6 +32,8 @@ export default function TicketForm({
   searchResults,
   setSearchResults,
   setConfirmDeletion,
+  pendingRequest,
+  setPendingRequest,
 }: Readonly<TicketFormProps>) {
   const [title, setTitle] = useState<string>("");
   const [titleError, setTitleError] = useState<boolean>(false);
@@ -58,8 +61,10 @@ export default function TicketForm({
     const [isTitleError, isDescriptionError] = validateTitleAndDescription();
 
     if (!isTitleError && !isDescriptionError) {
+      setPendingRequest(true);
       createNewTicket({ title: title, description: description })
         .then(() => {
+          setPendingRequest(false);
           setSnackbarConfig({
             open: true,
             severity: "success",
@@ -68,6 +73,7 @@ export default function TicketForm({
           setSidepanelConfig({ ...sidePanelConfig, open: false });
         })
         .catch((error) => {
+          setPendingRequest(false);
           setSnackbarConfig({
             open: true,
             severity: "error",
@@ -85,11 +91,13 @@ export default function TicketForm({
     }
 
     if (!isTitleError && !isDescriptionError) {
+      setPendingRequest(true);
       updateTicket(sidePanelConfig.ticket.id, {
         title: title,
         description: description,
       })
         .then((response) => {
+          setPendingRequest(false);
           setSearchResults(
             searchResults?.map((ticket) => {
               if (ticket.id === response.data.id) {
@@ -107,6 +115,7 @@ export default function TicketForm({
           setSidepanelConfig({ ...sidePanelConfig, open: false });
         })
         .catch((error) => {
+          setPendingRequest(false);
           setSnackbarConfig({
             open: true,
             severity: "error",
@@ -160,10 +169,20 @@ export default function TicketForm({
         )}
         <CancelButton onClick={cancel} />
         {sidePanelConfig.formType == "NewTicket" && (
-          <SaveButton onClick={save} />
+          <ApiRequestButton
+            onClick={save}
+            pendingRequest={pendingRequest}
+            color={"primary"}
+            label={"Save"}
+          />
         )}
         {sidePanelConfig.formType == "UpdateTicket" && (
-          <UpdateButton onClick={update} />
+          <ApiRequestButton
+            onClick={update}
+            pendingRequest={pendingRequest}
+            color={"primary"}
+            label={"Update"}
+          />
         )}
       </Stack>
     </>

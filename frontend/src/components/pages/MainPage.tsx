@@ -32,15 +32,21 @@ export default function MainPage({
     message: "Initial value",
   });
   const [confirmDeletion, setConfirmDeletion] = useState(false);
+  const [pendingRequest, setPendingRequest] = useState<boolean>(false);
 
   return (
     <>
-      <MainNavBar user={user} setSidepanelConfig={setSidepanelConfig} />
+      <MainNavBar
+        user={user}
+        setSidepanelConfig={setSidepanelConfig}
+        pendingRequest={pendingRequest}
+      />
       <Container fixed sx={{ p: 3 }}>
         <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
           <SearchForm
             setSearchResults={setSearchResults}
             setSnackbarConfig={setSnackbarConfig}
+            setPendingRequest={setPendingRequest}
           />
         </Box>
         <TicketCardsGrid
@@ -61,6 +67,8 @@ export default function MainPage({
             searchResults={searchResults}
             setSearchResults={setSearchResults}
             setConfirmDeletion={setConfirmDeletion}
+            pendingRequest={pendingRequest}
+            setPendingRequest={setPendingRequest}
           />
         </Container>
       </Sidepanel>
@@ -76,6 +84,8 @@ export default function MainPage({
         searchResults={searchResults}
         setSearchResults={setSearchResults}
         setSnackbarConfig={setSnackbarConfig}
+        pendingRequest={pendingRequest}
+        setPendingRequest={setPendingRequest}
       />
     </>
   );
